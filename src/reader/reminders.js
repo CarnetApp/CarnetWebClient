@@ -270,3 +270,6 @@ ReminderItemDialog.prototype.setTime = function (time) {
     var date = new Date(time)
     document.getElementById("reminder-time-picker").value = ("0" + date.getUTCHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);//cheat to have two digits
 }
+
+exports.RemindersUtils = RemindersUtils
+exports.RemindersDialog = RemindersDialog

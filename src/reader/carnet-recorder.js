@@ -1,4 +1,6 @@
-
+const CompatibilityEditor = require("../compatibility/compatibility-editor").CompatibilityEditor
+const compatibility = new CompatibilityEditor()
+compatibility.addNextcloudToken()
 var CarnetRecorder = function () {
   this.init()
 
@@ -90,7 +92,7 @@ CarnetRecorder.prototype.init = function () {
       numberOfChannels: 2,
       encoderBitRate: 192000,
       encoderSampleRate: 48000,
-      encoderPath: rootpath + "reader/libs/recorder/encoderWorker.min.js",
+      encoderPath: document.getElementById("root-url").innerHTML.trim() + "reader/libs/recorder/encoderWorker.min.js",
       //encoderPath: RequestBuilder.sRequestBuilder.api_url + "recorder/encoderWorker.min.js",
     };
     var recordingDuration = 0;
@@ -366,3 +368,4 @@ CarnetRecorder.prototype.refreshButtons = function () {
 
 }
 
+exports.CarnetRecorder = CarnetRecorder

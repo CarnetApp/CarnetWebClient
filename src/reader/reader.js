@@ -1,3 +1,16 @@
+const Utils = require("../utils/utils").Utils
+const FileUtils = require("../utils/file_utils").FileUtils
+const RequestBuilder = require("../requests/request_builder").RequestBuilder
+const CompatibilityEditor = require("../compatibility/compatibility-editor").CompatibilityEditor
+const compatibility = new CompatibilityEditor()
+compatibility.addNextcloudToken()
+const KeywordsDBManager = require("../keywords/keywords_db_manager").KeywordsDBManager
+const FileBrowser = require("../browsers/file-browser").FileBrowser
+const Note = require("../browsers/note").Note
+const TodoListManager = require("./todolist").TodoListManager
+const CarnetRecorder = require("./carnet-recorder").CarnetRecorder
+const RemindersDialog = require("./reminders").RemindersDialog
+
 var rootpath = undefined;
 var api_url = undefined;
 
@@ -1648,9 +1661,7 @@ if (loaded == undefined)
 
 var writer = undefined;
 var isElectron = false;
-var compatibility = undefined;
 function init () {
-    compatibility = new CompatibilityEditor();
     isElectron = compatibility.isElectron;
     console.log("isElectron "+isElectron)
     rootpath = document.getElementById("root-url").innerHTML.trim();
@@ -1708,3 +1719,5 @@ $(window).on('touchstart', function (e) {
 $(window).on('touchend', function () {
     writer.oCenter.style.overflowY = "auto";
 });
+
+compatibility.setOnReadyCallback(init)

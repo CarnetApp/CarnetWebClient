@@ -1,6 +1,9 @@
 
 var rootpath = "";
 
+const Compatibility = require("./compatibility").Compatibility
+
+
 String.prototype.endsWith = function (suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
@@ -64,17 +67,23 @@ class CompatibilityEditor extends Compatibility {
             parent.postMessage("loaded", "*")
         }
     }
+    setOnReadyCallback(callback){
+        var isElectron = false;
+        if(!isElectron){
+            $(document).ready(function(){
+                callback()
+            })
+        }
+        else{
+            console.log("isDefinitivetyelectron")
+            var ipcRenderer = require('electron').ipcRenderer;
+                    ipcRenderer.on('remote_ready', function (event, path) {
+                        callback()
+                    });
+        }
+
+    }
 }
-var isElectron = typeof require === "function" || typeof parent.require === "function";
-if(!isElectron){
-    $(document).ready(function(){
-        init()
-    })
-}
-else{
-    console.log("isDefinitivetyelectron")
-    var ipcRenderer = require('electron').ipcRenderer;
-            ipcRenderer.on('remote_ready', function (event, path) {
-                init()
-            });
-}
+
+
+exports.CompatibilityEditor = CompatibilityEditor

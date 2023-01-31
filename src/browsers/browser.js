@@ -1,11 +1,11 @@
 const Utils = require("../utils/utils").Utils
 const FileUtils = require("../utils/file_utils").FileUtils
-
 const RequestBuilder = require("../requests/request_builder").RequestBuilder
 const NoteCardViewGrid = require("./note_card_view").NoteCardViewGrid
 const Store = require("../compatibility/nextcloud/store").NextcloudStore
 const BrowserCompatibility = require("../compatibility/compatibility-browser").BrowserCompatibility
 const compatibility = new BrowserCompatibility()
+compatibility.addNextcloudToken()
 const RecentDBManager = require("../recent/recent_db_manager").RecentDBManager
 const KeywordsDBManager = require("../keywords/keywords_db_manager").KeywordsDBManager
 const UISettingsHelper = require("../settings/ui_settings_helper").UISettingsHelper
@@ -717,7 +717,7 @@ const right = document.getElementById("right-bar");
 
 //writer frame
 
-var isElectron = typeof require === "function";
+var isElectron = compatibility.isElectron;
 var writerFrame = undefined;
 var events = []
 

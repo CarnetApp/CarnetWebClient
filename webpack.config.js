@@ -4,9 +4,10 @@ const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-  entry: './src/browsers/browser.js',
+  entry:  {'browsers/browser': './src/browsers/browser.js', 
+  'reader/reader': "./src/reader/reader.js"},
   output: {
-    filename: 'browsers/browser.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
   },
   resolve: {
@@ -21,10 +22,26 @@ module.exports = {
         minify: false,
         chunks: ["mobileguide"],
     }),
+    new HtmlWebpackPlugin({
+      template: "./src/reader/reader.html",
+      filename: "reader/reader.html",
+      minify: false,
+      chunks: ["mobileguide"],
+  }),
     new NodePolyfillPlugin(),
     new CopyPlugin({
       patterns: [
         { from: "src/css", to: "css" },
+      ],
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: "fonts", to: "fonts" },
+      ],
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: "img", to: "img" },
       ],
     }),
     new CopyPlugin({

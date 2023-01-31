@@ -459,3 +459,6 @@ function resizeTextArea(textarea) {
     else
         textarea.style.height = textarea.scrollHeight + "px";
 }
+
+exports.TodoListManager = TodoListManager
+exports.TodoList = TodoList

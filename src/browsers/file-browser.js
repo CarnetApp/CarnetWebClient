@@ -1,4 +1,5 @@
 const RecentDBManager = require("../recent/recent_db_manager").RecentDBManager
+const RequestBuilder = require("../requests/request_builder").RequestBuilder
 
 
 var FileBrowser = function (path) {
