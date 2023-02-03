@@ -119,11 +119,13 @@ function onPrepared(error, data, notePath, action) {
             writerFrame.send('loadnote', notePath);
             writerFrame.send('action', action);
         }
-        else
+        else{
             writerFrame.contentWindow.loadPath(notePath, action);
+        }
+            
         $(loadingView).fadeIn(function () {
 
-            writerFrame.style.display = "inline-flex"
+        writerFrame.style.display = "inline-flex"
 
         })
     }

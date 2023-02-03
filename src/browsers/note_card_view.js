@@ -1,6 +1,13 @@
 const BrowserCompatibility = require("../compatibility/compatibility-browser").BrowserCompatibility
 const compatibility = new BrowserCompatibility()
 const Note = require("./note").Note
+const FileUtils = require("../utils/file_utils").FileUtils
+const Utils = require("../utils/utils").Utils
+
+var api_url = Utils.getParameterByName("api_url")
+if (api_url == undefined)
+    api_url = document.getElementById("api-url").innerHTML !== "!API_URL" ? document.getElementById("api-url").innerHTML : "./";
+
 
 var NoteCardView = function (elem, onTodoListChange, masonry) {
     this.elem = elem;

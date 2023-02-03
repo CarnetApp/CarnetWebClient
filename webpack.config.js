@@ -36,7 +36,17 @@ module.exports = {
     }),
     new CopyPlugin({
       patterns: [
+        { from: "src/reader/css", to: "reader/css" },
+      ],
+    }),
+    new CopyPlugin({
+      patterns: [
         { from: "fonts", to: "fonts" },
+      ],
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: "src/firstlaunch", to: "firstlaunch" },
       ],
     }),
     new CopyPlugin({

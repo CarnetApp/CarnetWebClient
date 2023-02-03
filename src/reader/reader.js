@@ -722,7 +722,7 @@ Writer.prototype.updateKeywordsListSelector = function (currentWord = "") {
 
 Writer.prototype.init = function () {
     var writer = this;
-    this.recorder = new CarnetRecorder();
+    this.recorder = new CarnetRecorder(this);
 
     window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
         if (errorMsg.indexOf("parentElement") >= 0) //ignore that one
@@ -1655,6 +1655,7 @@ function loadPath(path, action) {
 
 }
 
+window.loadPath = loadPath
 
 if (loaded == undefined)
     var loaded = false; //don't know why, loaded twice on android
