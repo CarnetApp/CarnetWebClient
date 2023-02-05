@@ -10,6 +10,7 @@ const Note = require("../browsers/note").Note
 const TodoListManager = require("./todolist").TodoListManager
 const CarnetRecorder = require("./carnet-recorder").CarnetRecorder
 const RemindersDialog = require("./reminders").RemindersDialog
+const HTMLTextEditor = require("./html-text-editor").HTMLTextEditor
 
 var rootpath = undefined;
 var api_url = undefined;
@@ -315,14 +316,28 @@ Writer.prototype.extractNote = function (callback) {
             } else
                 onExtracted()
         })
-        writer.fillWriter(data.html)
         if (data.metadata == null) {
             writer.note.is_not_created = true;
             writer.note.metadata = new NoteMetadata();
         }
         else
             writer.note.metadata = data.metadata;
-        writer.manager = new TodoListManager(document.getElementById("text"))
+        writer.textEditor = new HTMLTextEditor(writer)
+        writer.textEditor.init()
+        writer.textEditor.setNoteAndContent(writer.note, data.html)
+        writer.oDoc = document.getElementById("text")
+
+        writer.lastSavedTimeout = setTimeout(saveTextIfChanged, 4000);
+        writer.sDefTxt = writer.oDoc.innerHTML;
+        /*simple initialization*/
+        writer.oDoc.focus();
+        resetScreenHeight();
+        writer.refreshKeywords();
+        compatibility.onNoteLoaded();
+        $("#toolbar").scrollLeft(500)
+        $("#toolbar").animate({ scrollLeft: '0' }, 2000);
+
+        writer.manager = new TodoListManager(this.oDoc)
         writer.oDoc.addEventListener('remove-todolist', function (e) {
             e.previous.innerHTML += "<br />" + e.next.innerHTML
             $(e.next).remove()
@@ -1195,7 +1210,6 @@ Writer.prototype.removeKeyword = function (word) {
 
 Writer.prototype.reset = function () {
     this.exitOnSaved = false
-    this.putDefaultHTML()
     this.setMediaList([])
     document.getElementById("whole-frame-container").style.display = "none"
     document.getElementById("toolbar").classList.remove("more")
@@ -1218,16 +1232,7 @@ Writer.prototype.reset = function () {
 
 }
 
-Writer.prototype.putDefaultHTML = function () {
-    this.oEditor.innerHTML = '<div id="text" style="height:100%;">\
-    <!-- be aware that THIS will be modified in java -->\
-    <!-- soft won\'t save note if contains donotsave345oL -->\
-    <div class="edit-zone" contenteditable></div>\
-</div>\
-<div id="floating">\
-\
-</div>';
-}
+
 
 Writer.prototype.setColor = function (color) {
     document.execCommand('styleWithCSS', false, true);
