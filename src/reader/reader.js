@@ -1,3 +1,4 @@
+
 const Utils = require("../utils/utils").Utils
 const FileUtils = require("../utils/file_utils").FileUtils
 const RequestBuilder = require("../requests/request_builder").RequestBuilder
@@ -11,6 +12,7 @@ const TodoListManager = require("./todolist").TodoListManager
 const CarnetRecorder = require("./carnet-recorder").CarnetRecorder
 const RemindersDialog = require("./reminders").RemindersDialog
 const HTMLTextEditor = require("./html-text-editor").HTMLTextEditor
+const MDTextEditor = require("./md-text-editor").MDTextEditor
 
 var rootpath = undefined;
 var api_url = undefined;
@@ -169,11 +171,12 @@ Writer.prototype.setMediaList = function (list) {
         document.getElementById("fullscreen-media-button").style.display = "block"
         writer.mediaList.style.display = "block"
 
-        if (this.oDoc.innerText.trim() == "") {
+        /*if (this.oDoc.innerText.trim() == "") {
             var mediaBar = document.getElementById("media-toolbar");
             if (!$(mediaBar).is(":visible"))
                 this.toolbarManager.toggleToolbar(mediaBar)
         }
+        */
     } else {
         writer.mediaList.style.display = "none"
         document.getElementById("fullscreen-media-button").style.display = "none"
@@ -322,15 +325,15 @@ Writer.prototype.extractNote = function (callback) {
         }
         else
             writer.note.metadata = data.metadata;
-        writer.textEditor = new HTMLTextEditor(writer)
+        writer.textEditor = new MDTextEditor(writer)
         writer.textEditor.init()
         writer.textEditor.setNoteAndContent(writer.note, data.html)
-        writer.oDoc = document.getElementById("text")
+        //writer.oDoc = document.getElementById("text")
 
         writer.lastSavedTimeout = setTimeout(saveTextIfChanged, 4000);
-        writer.sDefTxt = writer.oDoc.innerHTML;
+        //writer.sDefTxt = writer.oDoc.innerHTML;
         /*simple initialization*/
-        writer.oDoc.focus();
+       // writer.oDoc.focus();
         resetScreenHeight();
         writer.refreshKeywords();
         compatibility.onNoteLoaded();
@@ -338,7 +341,7 @@ Writer.prototype.extractNote = function (callback) {
         $("#toolbar").animate({ scrollLeft: '0' }, 2000);
 
         writer.manager = new TodoListManager(this.oDoc)
-        writer.oDoc.addEventListener('remove-todolist', function (e) {
+       /* writer.oDoc.addEventListener('remove-todolist', function (e) {
             e.previous.innerHTML += "<br />" + e.next.innerHTML
             $(e.next).remove()
             writer.hasTextChanged = true;
@@ -346,6 +349,7 @@ Writer.prototype.extractNote = function (callback) {
         writer.oDoc.addEventListener('todolist-changed', function (e) {
             writer.hasTextChanged = true;
         }, false);
+        */
         if (writer.note.metadata.todolists != undefined)
             writer.manager.fromData(writer.note.metadata.todolists)
         console.log("todo " + writer.note.metadata.todolists)
@@ -376,7 +380,7 @@ Writer.prototype.extractNote = function (callback) {
 
 var saveTextIfChanged = function (onSaved) {
     console.log("has text changed ? " + writer.hasTextChanged)
-    if (writer.hasTextChanged) {
+    if (writer.textEditor.hasTextChanged) {
         if (writer.isBigNote()) {
             if (writer.scrollBottom.style.display == "none") {
                 writer.scrollBottom.style.display = "block"
@@ -459,68 +463,6 @@ Writer.prototype.isBigNote = function () {
     return this.oCenter.scrollHeight > this.oCenter.clientHeight + 200
 }
 
-Writer.prototype.fillWriter = function (extractedHTML) {
-    var writer = this;
-    if (extractedHTML != undefined && extractedHTML != "")
-        this.oEditor.innerHTML = extractedHTML;
-    else this.putDefaultHTML();
-    var name = FileUtils.stripExtensionFromName(FileUtils.getFilename(this.note.path))
-    document.getElementById("name-input").value = name.startsWith("untitled") ? "" : name
-    this.oCenter.addEventListener("scroll", function () {
-        lastscroll = $(writer.oCenter).scrollTop()
-    })
-    this.oDoc = document.getElementById("text");
-    this.oDoc.contentEditable = false
-    $(this.oDoc).on('DOMNodeInserted', function (e) {
-        console.log("new element " + e.target.tagName)
-        if (e.target.tagName == "DIV") {
-            e.target.dir = "auto"
-        }
-    });
-    if (this.oDoc.getElementsByClassName("edit-zone").length == 0) { //old note...
-        var toCopy = this.oDoc.innerHTML;
-        this.oDoc.innerHTML = "";
-        this.createEditableZone().innerHTML = toCopy
-    }
-
-    for (var editable of this.oDoc.getElementsByClassName("edit-zone")) {
-        editable.onclick = function (event) {
-            writer.onEditableClick(event);
-        }
-        for (var insideDiv of editable.getElementsByTagName("div")) {
-            insideDiv.dir = "auto"
-        }
-    }
-    this.oDoc.onclick = function (event) {
-        if (event.target.id == "text") {
-            //focus on last editable element
-            var elements = event.target.getElementsByClassName("edit-zone");
-            writer.placeCaretAtEnd(elements[elements.length - 1]);
-        }
-    }
-    this.oDoc.addEventListener("input", function () {
-        writer.hasTextChanged = true;
-    }, false);
-    //focus on last editable element
-
-
-
-
-
-
-    this.lastSavedTimeout = setTimeout(saveTextIfChanged, 4000);
-    this.sDefTxt = this.oDoc.innerHTML;
-    /*simple initialization*/
-    this.oDoc.focus();
-    resetScreenHeight();
-    this.refreshKeywords();
-    compatibility.onNoteLoaded();
-    $("#toolbar").scrollLeft(500)
-    $("#toolbar").animate({ scrollLeft: '0' }, 2000);
-
-
-
-}
 //var KeywordsDBManager = require(rootpath + "keywords/keywords_db_manager").KeywordsDBManager;
 var keywordsDBManager = new KeywordsDBManager()
 Writer.prototype.refreshKeywords = function () {
@@ -918,6 +860,7 @@ Writer.prototype.init = function () {
             console.log("on click " + this.id);
             switch (this.id) {
                 case "bold":
+                    writer.textEditor.toggleBold()
                 case "italic":
                 case "underline":
                 case "justifyleft":
@@ -1562,7 +1505,10 @@ SaveNoteTask.prototype.trySave = function (onEnd, trial) {
     // /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/ 
     //var re = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
     //var m;
-    var urls = this.writer.oEditor.innerText.match(Utils.httpReg)
+
+    const content = this.writer.textEditor.getContent()
+    const cleanText = this.writer.textEditor.getCleanText()
+    var urls = cleanText.match(Utils.httpReg)
     if (urls == null)
         urls = []
     if (this.writer.note.metadata.urls == undefined) {
@@ -1582,19 +1528,19 @@ SaveNoteTask.prototype.trySave = function (onEnd, trial) {
     const task = this;
     if (this.writer.note.metadata.creation_date === "")
         this.writer.note.metadata.creation_date = Date.now();
-    var tmpElem = this.writer.oEditor.cloneNode(true);
+    /*var tmpElem = this.writer.oEditor.cloneNode(true);
     var todolists = tmpElem.getElementsByClassName("todo-list");
     console.log("todolists length " + todolists.length)
 
     for (var i = 0; i < todolists.length; i++) {
         todolists[i].innerHTML = ""
-    }
+    }*/
     this.writer.note.metadata.todolists = this.writer.manager.toData()
     this.writer.note.metadata.last_modification_date = Date.now();
     RequestBuilder.sRequestBuilder.post("/note/saveText", {
         id: this.writer.saveID,
         path: this.writer.note.path,
-        html: tmpElem.innerHTML,
+        html: content,
         metadata: JSON.stringify(this.writer.note.metadata)
     }, function (error, data) {
         if (error) {

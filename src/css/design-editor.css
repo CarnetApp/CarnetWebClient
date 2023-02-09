@@ -227,7 +227,7 @@ html {
 	outline: 0px solid transparent;
 }
 
-#text {
+#text, .editor {
 	outline: 0px solid transparent;
 }
 

@@ -9,6 +9,14 @@ class TextEditor {
     setNoteAndContent(note, noteContent){
 
     }
+    getContent(){}
+    getCleanText(){
+        return ""
+    }
+
+    toggleBold(){
+        
+    }
 }
 
 exports.TextEditor = TextEditor
