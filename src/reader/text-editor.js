@@ -3,20 +3,23 @@ const { Note } = require("../browsers/note")
 
 class TextEditor {
 
-    init(){
+    init() {
     }
 
-    setNoteAndContent(note, noteContent){
+    setNoteAndContent(note, noteContent) {
 
     }
-    getContent(){}
-    getCleanText(){
+    getContent() { }
+    getCleanText() {
         return ""
     }
 
-    toggleBold(){
-        
+    toggleBold() {
+
     }
+    onLoaded() { }
+
+    focusAtTheEnd() { }
 }
 
 exports.TextEditor = TextEditor

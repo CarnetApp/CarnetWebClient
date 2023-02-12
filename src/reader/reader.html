@@ -479,11 +479,20 @@
 						<div style="clear:both"></div>
 
 					</div>
-					<button id="scroll-bottom" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button">
-						<i class="material-icons">
-							arrow_downward
-						</i>
-					</button>
+					<div id="right-button-container">
+						<label class="mdl-button mdl-js-button mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect"
+							for="markdown-switch">
+							<input type="checkbox" id="markdown-switch" class="mdl-icon-toggle__input">
+							<i class="mdl-icon-toggle__label">MD</i>
+						</label>
+
+						<button id="scroll-bottom" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button">
+							<i class="material-icons">
+								arrow_downward
+							</i>
+						</button>
+					</div>
+
 					<div id="name-container" dir="auto">
 						<input dir="auto" class="mdl-textfield__input" type="text" name="name" id="name-input" value=""
 							placeholder="Title" data-i18n="[placeholder]note_name">

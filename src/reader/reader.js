@@ -7,7 +7,7 @@ const compatibility = new CompatibilityEditor()
 compatibility.addNextcloudToken()
 const KeywordsDBManager = require("../keywords/keywords_db_manager").KeywordsDBManager
 const FileBrowser = require("../browsers/file-browser").FileBrowser
-const Note = require("../browsers/note").Note
+const { Note, NoteMetadata } = require("../browsers/note")
 const TodoListManager = require("./todolist").TodoListManager
 const CarnetRecorder = require("./carnet-recorder").CarnetRecorder
 const RemindersDialog = require("./reminders").RemindersDialog
@@ -325,8 +325,8 @@ Writer.prototype.extractNote = function (callback) {
         else
             writer.note.metadata = data.metadata;
 
-        writer.note.isMarkdown = data.isMarkdown
-        if (data.isMarkdown)
+        writer.note.isMarkdown = data.isMarkdown || data.isNew
+        if (writer.note.isMarkdown)
             writer.textEditor = new MDTextEditor(writer)
         else
             writer.textEditor = new HTMLTextEditor(writer)
@@ -368,17 +368,8 @@ Writer.prototype.extractNote = function (callback) {
         writer.updateNoteColor(writer.note.metadata.color != undefined ? writer.note.metadata.color : "none");
         writer.setDoNotEdit(false)
         callback();
-        setTimeout(function () {
-            if (!writer.isBigNote()) {
-                var elements = writer.oDoc.getElementsByClassName("edit-zone");
-                writer.placeCaretAtEnd(elements[elements.length - 1]);
-                writer.oFloating = document.getElementById("floating");
-                writer.scrollBottom.style.display = "none"
-            } else {
-                $(writer.oCenter).scrollTop(0)
-                writer.scrollBottom.style.display = "block"
-            }
-        }, 200)
+        writer.textEditor.onLoaded()
+
     });
 }
 
@@ -443,25 +434,6 @@ Writer.prototype.openPrintDialog = function () {
 }
 
 
-Writer.prototype.placeCaretAtEnd = function (el) {
-    el.focus();
-    if (typeof window.getSelection != "undefined"
-        && typeof document.createRange != "undefined") {
-        var range = document.createRange();
-        range.selectNodeContents(el);
-        range.collapse(false);
-        var sel = window.getSelection();
-        if (sel == null)
-            return
-        sel.removeAllRanges();
-        sel.addRange(range);
-    } else if (typeof document.body.createTextRange != "undefined") {
-        var textRange = document.body.createTextRange();
-        textRange.moveToElementText(el);
-        textRange.collapse(false);
-        textRange.select();
-    }
-}
 
 Writer.prototype.isBigNote = function () {
     return this.oCenter.scrollHeight > this.oCenter.clientHeight + 200
@@ -988,11 +960,7 @@ Writer.prototype.init = function () {
 
 Writer.prototype.closeFullscreenMediaToolbar = function () {
     this.mediaToolbar.classList.remove("fullscreen-media-toolbar")
-    if (this.oDoc.innerText.trim() == "") {
-        //put focus
-        var elements = this.oDoc.getElementsByClassName("edit-zone");
-        this.placeCaretAtEnd(elements[elements.length - 1]);
-    }
+    this.textEditor.focusAtTheEnd()
 
 }
 

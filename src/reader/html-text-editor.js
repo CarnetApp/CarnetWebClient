@@ -63,7 +63,7 @@ class HTMLTextEditor extends TextEditor {
             if (event.target.id == "text") {
                 //focus on last editable element
                 var elements = event.target.getElementsByClassName("edit-zone");
-                editor.writer.placeCaretAtEnd(elements[elements.length - 1]);
+                editor.placeCaretAtEnd(elements[elements.length - 1]);
             }
         }
         this.oDoc.addEventListener("input", function () {
@@ -88,6 +88,50 @@ class HTMLTextEditor extends TextEditor {
 
     getCleanText() {
         return this.oEditor.innerText
+    }
+
+    onLoaded() {
+        let editor = this
+        setTimeout(function () {
+            if (!editor.writer.isBigNote()) {
+                var elements = editor.oDoc.getElementsByClassName("edit-zone");
+                editor.placeCaretAtEnd(elements[elements.length - 1]);
+                editor.writer.oFloating = document.getElementById("floating");
+                editor.writer.scrollBottom.style.display = "none"
+            } else {
+                $(editor.writer.oCenter).scrollTop(0)
+                editor.writer.scrollBottom.style.display = "block"
+            }
+        }, 200)
+    }
+
+    focusAtTheEnd() {
+        if (this.oDoc.innerText.trim() == "") {
+            //put focus
+            var elements = this.oDoc.getElementsByClassName("edit-zone");
+            this.placeCaretAtEnd(elements[elements.length - 1]);
+        }
+
+    }
+
+    placeCaretAtEnd(el) {
+        el.focus();
+        if (typeof window.getSelection != "undefined"
+            && typeof document.createRange != "undefined") {
+            var range = document.createRange();
+            range.selectNodeContents(el);
+            range.collapse(false);
+            var sel = window.getSelection();
+            if (sel == null)
+                return
+            sel.removeAllRanges();
+            sel.addRange(range);
+        } else if (typeof document.body.createTextRange != "undefined") {
+            var textRange = document.body.createTextRange();
+            textRange.moveToElementText(el);
+            textRange.collapse(false);
+            textRange.select();
+        }
     }
 }
 

@@ -23,4 +23,4 @@ var NoteMetadata = function () {
     this.color = "none"
 }
 exports.Note = Note
-
+exports.NoteMetadata = NoteMetadata

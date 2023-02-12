@@ -141,7 +141,7 @@ html {
 	text-decoration: none;
 }
 
-#scroll-bottom {
+#right-button-container {
 	float: right;
 	margin-top: 10px;
 }
@@ -240,7 +240,7 @@ html {
 }
 
 #text,
-.editor {
+.ProseMirror {
 	outline: 0px solid transparent;
 }
 
@@ -361,7 +361,7 @@ div#container-button::-webkit-scrollbar {
 
 #name-container {
 	margin-top: 5px;
-	margin-right: 69px;
+	margin-right: 122px;
 }
 
 #name-container label {
@@ -460,7 +460,8 @@ div#container-button::-webkit-scrollbar {
 	transform: scale(1.25);
 }
 
-.edit-zone {
+.edit-zone,
+.ProseMirror {
 	width: calc(100% - 40px);
 	padding: 20px;
 }
@@ -795,4 +796,8 @@ div#container-button::-webkit-scrollbar {
 	margin: auto;
 	max-width: 500px;
 	max-height: 500px;
+}
+
+p {
+	font-size: inherit;
 }
