@@ -324,7 +324,12 @@ Writer.prototype.extractNote = function (callback) {
         }
         else
             writer.note.metadata = data.metadata;
-        writer.textEditor = new MDTextEditor(writer)
+
+        writer.note.isMarkdown = data.isMarkdown
+        if (data.isMarkdown)
+            writer.textEditor = new MDTextEditor(writer)
+        else
+            writer.textEditor = new HTMLTextEditor(writer)
         writer.textEditor.init()
         writer.textEditor.setNoteAndContent(writer.note, data.html)
         //writer.oDoc = document.getElementById("text")
@@ -1527,19 +1532,14 @@ SaveNoteTask.prototype.trySave = function (onEnd, trial) {
     const task = this;
     if (this.writer.note.metadata.creation_date === "")
         this.writer.note.metadata.creation_date = Date.now();
-    /*var tmpElem = this.writer.oEditor.cloneNode(true);
-    var todolists = tmpElem.getElementsByClassName("todo-list");
-    console.log("todolists length " + todolists.length)
 
-    for (var i = 0; i < todolists.length; i++) {
-        todolists[i].innerHTML = ""
-    }*/
     this.writer.note.metadata.todolists = this.writer.manager.toData()
     this.writer.note.metadata.last_modification_date = Date.now();
     RequestBuilder.sRequestBuilder.post("/note/saveText", {
         id: this.writer.saveID,
         path: this.writer.note.path,
         html: content,
+        isMarkdown: this.writer.note.isMarkdown,
         metadata: JSON.stringify(this.writer.note.metadata)
     }, function (error, data) {
         if (error) {

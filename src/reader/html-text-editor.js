@@ -1,9 +1,9 @@
 const { FileUtils } = require("../utils/file_utils");
 const { TextEditor } = require("./text-editor");
 
-class HTMLTextEditor extends TextEditor{
+class HTMLTextEditor extends TextEditor {
 
-    constructor(writer){
+    constructor(writer) {
         super()
         this.writer = writer
     }
@@ -26,7 +26,7 @@ class HTMLTextEditor extends TextEditor{
     </div>';
     }
 
-    setNoteAndContent(note, noteContent){
+    setNoteAndContent(note, noteContent) {
         this.note = note
         var editor = this;
         if (noteContent != undefined && noteContent != "")
@@ -50,7 +50,7 @@ class HTMLTextEditor extends TextEditor{
             this.oDoc.innerHTML = "";
             this.createEditableZone().innerHTML = toCopy
         }
-    
+
         for (var editable of this.oDoc.getElementsByClassName("edit-zone")) {
             editable.onclick = function (event) {
                 editor.writer.onEditableClick(event);
@@ -67,11 +67,27 @@ class HTMLTextEditor extends TextEditor{
             }
         }
         this.oDoc.addEventListener("input", function () {
-            editor.writer.hasTextChanged = true;
+            editor.hasTextChanged = true;
         }, false);
         //focus on last editable element  
-       
-    
+
+
+    }
+
+    getContent() {
+        var tmpElem = this.oEditor.cloneNode(true);
+        var todolists = tmpElem.getElementsByClassName("todo-list");
+        console.log("todolists length " + todolists.length)
+
+        for (var i = 0; i < todolists.length; i++) {
+            todolists[i].innerHTML = ""
+        }
+        return tmpElem.innerHTML
+
+    }
+
+    getCleanText() {
+        return this.oEditor.innerText
     }
 }
 
