@@ -26,7 +26,7 @@ class MDTextEditor extends TextEditor{
     }
 
     setNoteAndContent(note, noteContent){
-        this.putDefaultHTML();
+        this.oEditor.innerHTML = "";
         editor = this
         this.view = new EditorView(this.oEditor, {
             state: EditorState.create({
