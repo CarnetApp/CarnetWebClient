@@ -21,7 +21,6 @@ var Writer = function (elem) {
     this.elem = elem;
     this.seriesTaskExecutor = new SeriesTaskExecutor();
     this.saveNoteTask = new SaveNoteTask(this)
-    this.hasTextChanged = false;
     this.manager = new TodoListManager(document.getElementById("text"))
 
     resetScreenHeight();
@@ -333,7 +332,7 @@ Writer.prototype.extractNote = function (callback) {
         writer.lastSavedTimeout = setTimeout(saveTextIfChanged, 4000);
         //writer.sDefTxt = writer.oDoc.innerHTML;
         /*simple initialization*/
-       // writer.oDoc.focus();
+        // writer.oDoc.focus();
         resetScreenHeight();
         writer.refreshKeywords();
         compatibility.onNoteLoaded();
@@ -341,15 +340,15 @@ Writer.prototype.extractNote = function (callback) {
         $("#toolbar").animate({ scrollLeft: '0' }, 2000);
 
         writer.manager = new TodoListManager(this.oDoc)
-       /* writer.oDoc.addEventListener('remove-todolist', function (e) {
-            e.previous.innerHTML += "<br />" + e.next.innerHTML
-            $(e.next).remove()
-            writer.hasTextChanged = true;
-        }, false);
-        writer.oDoc.addEventListener('todolist-changed', function (e) {
-            writer.hasTextChanged = true;
-        }, false);
-        */
+        /* writer.oDoc.addEventListener('remove-todolist', function (e) {
+             e.previous.innerHTML += "<br />" + e.next.innerHTML
+             $(e.next).remove()
+             writer.hasTextChanged = true;
+         }, false);
+         writer.oDoc.addEventListener('todolist-changed', function (e) {
+             writer.hasTextChanged = true;
+         }, false);
+         */
         if (writer.note.metadata.todolists != undefined)
             writer.manager.fromData(writer.note.metadata.todolists)
         console.log("todo " + writer.note.metadata.todolists)
@@ -379,7 +378,7 @@ Writer.prototype.extractNote = function (callback) {
 }
 
 var saveTextIfChanged = function (onSaved) {
-    console.log("has text changed ? " + writer.hasTextChanged)
+    console.log("has text changed ? " + writer.textEditor.hasTextChanged)
     if (writer.textEditor.hasTextChanged) {
         if (writer.isBigNote()) {
             if (writer.scrollBottom.style.display == "none") {
@@ -408,7 +407,7 @@ var saveTextIfChanged = function (onSaved) {
     else {
         writer.setNextSaveTask();
     }
-    writer.hasTextChanged = false;
+    writer.textEditor.hasTextChanged = false;
 }
 
 Writer.prototype.setNextSaveTask = function () {
@@ -701,7 +700,7 @@ Writer.prototype.init = function () {
     document.getElementById("input_file").onchange = function () {
         var input = this;
         if (writer.note.is_not_created) {
-            writer.hasTextChanged = true
+            writer.textEditor.hasTextChanged = true
             //first we need to create it
             saveTextIfChanged(function () {
                 writer.sendFiles(input.files);
@@ -842,7 +841,7 @@ Writer.prototype.init = function () {
                     const picker = new MaterialDatetimePicker({ default: moment(date) })
                         .on('submit', (val) => {
                             writer.note.metadata.custom_date = val.unix() * 1000;
-                            writer.hasTextChanged = true
+                            writer.textEditor.hasTextChanged = true
                         });
                     picker.open();
                     break
@@ -995,9 +994,9 @@ Writer.prototype.closeFullscreenMediaToolbar = function () {
 Writer.prototype.askToExit = function () {
     this.setDoNotEdit(true)
     console.log("exec? " + this.seriesTaskExecutor.isExecuting)
-    if (this.seriesTaskExecutor.isExecuting || this.hasTextChanged) {
+    if (this.seriesTaskExecutor.isExecuting || this.textEditor.hasTextChanged) {
         this.exitOnSaved = true;
-        if (this.hasTextChanged) {
+        if (this.textEditor.hasTextChanged) {
             saveTextIfChanged()
         }
         return false;
@@ -1195,7 +1194,7 @@ Writer.prototype.saveRating = function (rating) {
     else
         this.note.metadata.rating = -1;
     console.log("new rating " + this.note.metadata.rating)
-    writer.hasTextChanged = true;
+    writer.textEditor.hasTextChanged = true;
 }
 
 Writer.prototype.updateRating = function (rating) {
@@ -1214,7 +1213,7 @@ Writer.prototype.saveNoteColor = function (color) {
     this.note.metadata.color = color;
     document.getElementById("note-color-picker-dialog").style.background = "var(--note-" + color + ")"
     console.log("new color " + this.note.metadata.color)
-    writer.hasTextChanged = true;
+    writer.textEditor.hasTextChanged = true;
 }
 
 Writer.prototype.updateNoteColor = function (color) {
@@ -1322,7 +1321,7 @@ Writer.prototype.handleAction = function (type, value) {
         var elements = document.getElementsByClassName("edit-zone");
         var element = elements[elements.length - 1];
         element.innerHTML += value;
-        this.hasTextChanged = true
+        this.textEditor.hasTextChanged = true
 
     }
     else if (type === "record-audio") {
@@ -1613,9 +1612,9 @@ if (loaded == undefined)
 
 var writer = undefined;
 var isElectron = false;
-function init () {
+function init() {
     isElectron = compatibility.isElectron;
-    console.log("isElectron "+isElectron)
+    console.log("isElectron " + isElectron)
     rootpath = document.getElementById("root-url").innerHTML.trim();
     api_url = document.getElementById("api-url").innerHTML.trim();
 
