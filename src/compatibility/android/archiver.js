@@ -1,9 +1,9 @@
-var ArchiverCompatibility = function () {}
+var ArchiverCompatibility = function () { }
 ArchiverCompatibility.create = function (type, ktkl) {
     return new Archive();
 }
 
-var Archive = function () {}
+var Archive = function () { }
 
 function generateUID() {
     // I generate the UID from two parts here
@@ -36,3 +36,5 @@ ArchiverCompatibility.finalizeResult = function (callback) {
     console.log(ArchiverCompatibility.callbacks[callback])
     ArchiverCompatibility.callbacks[callback]()
 }
+
+exports.Archive = Archive

@@ -2,7 +2,7 @@
 var rootpath = "";
 
 const Compatibility = require("./compatibility").Compatibility
-
+const AndroidRecorder = require("./android/android_recorder").AndroidRecorder
 
 String.prototype.endsWith = function (suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
@@ -67,19 +67,19 @@ class CompatibilityEditor extends Compatibility {
             parent.postMessage("loaded", "*")
         }
     }
-    setOnReadyCallback(callback){
+    setOnReadyCallback(callback) {
         var isElectron = false;
-        if(!isElectron){
-            $(document).ready(function(){
+        if (!isElectron) {
+            $(document).ready(function () {
                 callback()
             })
         }
-        else{
+        else {
             console.log("isDefinitivetyelectron")
             var ipcRenderer = require('electron').ipcRenderer;
-                    ipcRenderer.on('remote_ready', function (event, path) {
-                        callback()
-                    });
+            ipcRenderer.on('remote_ready', function (event, path) {
+                callback()
+            });
         }
 
     }

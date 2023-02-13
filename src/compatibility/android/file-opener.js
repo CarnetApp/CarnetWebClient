@@ -8,7 +8,7 @@ function generateUID() {
     return firstPart + secondPart;
 }
 
-var FileOpener = function () {}
+var FileOpener = function () { }
 FileOpener.callbacks = []
 
 FileOpener.selectFile = function (callback) {
@@ -22,3 +22,5 @@ FileOpener.selectFileResult = function (callback, path) {
     paths.push(path)
     FileOpener.callbacks[callback](paths);
 }
+
+exports.FileOpener = FileOpener

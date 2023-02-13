@@ -1,4 +1,4 @@
-var KeywordDBManagerCompatibility = function(){
+var KeywordDBManagerCompatibility = function () {
 }
 function generateUID() {
     // I generate the UID from two parts here
@@ -11,24 +11,26 @@ function generateUID() {
 }
 
 KeywordDBManagerCompatibility.callbacks = []
-KeywordDBManagerCompatibility.KeywordsDBManager= function(path){
+KeywordDBManagerCompatibility.KeywordsDBManager = function (path) {
 
 }
-KeywordDBManagerCompatibility.KeywordsDBManager.prototype.addToDB = function(word, path){
+KeywordDBManagerCompatibility.KeywordsDBManager.prototype.addToDB = function (word, path) {
     app.addKeyword(word, path);
 }
 
-KeywordDBManagerCompatibility.KeywordsDBManager.prototype.removeFromDB = function(word, path){
+KeywordDBManagerCompatibility.KeywordsDBManager.prototype.removeFromDB = function (word, path) {
     app.removeKeyword(word, path);
 }
 
-KeywordDBManagerCompatibility.KeywordsDBManager.prototype.getFlatenDB = function(callback){
+KeywordDBManagerCompatibility.KeywordsDBManager.prototype.getFlatenDB = function (callback) {
     var uid = generateUID();
     KeywordDBManagerCompatibility.callbacks[uid] = callback
     app.getFlatenKeywordsDB(uid)
 }
 
-KeywordDBManagerCompatibility.getFlatenDBResult = function(callback, dataStr){
+KeywordDBManagerCompatibility.getFlatenDBResult = function (callback, dataStr) {
     var data = JSON.parse(dataStr)
-    KeywordDBManagerCompatibility.callbacks[callback](false,data)
+    KeywordDBManagerCompatibility.callbacks[callback](false, data)
 }
+
+exports.KeywordDBManagerCompatibility = KeywordDBManagerCompatibility

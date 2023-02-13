@@ -1,10 +1,10 @@
 
 
 
-var NoteOpenerResultReceiver = function(){};
+var NoteOpenerResultReceiver = function () { };
 
 NoteOpenerResultReceiver.callbacks = []
-NoteOpenerResultReceiver.generateUID = function() {
+NoteOpenerResultReceiver.generateUID = function () {
     // I generate the UID from two parts here
     // to ensure the random number provide enough bits.
     var firstPart = (Math.random() * 46656) | 0;
@@ -17,10 +17,12 @@ NoteOpenerResultReceiver.generateUID = function() {
 NoteOpener.prototype.extractTo = function (path, callback) {
     //extract + read
     var uid = NoteOpenerResultReceiver.generateUID();
-    NoteOpenerResultReceiver.callbacks[uid] = callback;    
+    NoteOpenerResultReceiver.callbacks[uid] = callback;
     app.extractTo(this.note.path, path, uid)
 }
 
 NoteOpenerResultReceiver.extractResult = function (callback, error) {
     NoteOpenerResultReceiver.callbacks[callback](error);
 }
+
+exports.NoteOpener = NoteOpener

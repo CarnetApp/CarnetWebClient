@@ -47,7 +47,7 @@ class WYSIWYGTextEditorView extends TextEditorView {
   setContent(noteContent) {
 
     this.textEditor.resetEditor()
-    editor = this
+    let editor = this
     console.log("noteContent " + noteContent)
 
     this.view = new EditorView(this.textEditor.oEditor, {
@@ -101,6 +101,8 @@ class MDTextEditor extends TextEditor {
   }
 
   setNoteAndContent(note, noteContent) {
+    if (noteContent == undefined)
+      noteContent = ""
     console.log("noteContent " + noteContent)
     this.switchToWYSIWYG(noteContent)
   }

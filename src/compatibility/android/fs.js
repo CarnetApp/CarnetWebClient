@@ -87,3 +87,5 @@ var WriteStream = function () {
 WriteStream.prototype.on = function (action, callback) {
     this.close = callback
 }
+
+exports.FSCompatibility = FSCompatibility

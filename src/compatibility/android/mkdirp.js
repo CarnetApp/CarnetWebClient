@@ -1,7 +1,9 @@
-var MKDirPCompatibility = function (){
+var MKDirPCompatibility = function () {
 
 }
 
-MKDirPCompatibility.sync = function (path){
+MKDirPCompatibility.sync = function (path) {
     app.mkdirs(path);
 }
+
+exports.MKDirPCompatibility = MKDirPCompatibility

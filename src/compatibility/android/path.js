@@ -18,16 +18,16 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
-var PathCompatibility = function(){};
+var PathCompatibility = function () { };
 
 var splitPathRe =
-    /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
+  /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
 
 
-PathCompatibility.dirname = function(path) {
+PathCompatibility.dirname = function (path) {
   var result = posixSplitPath(path),
-      root = result[0],
-      dir = result[1];
+    root = result[0],
+    dir = result[1];
 
   if (!root && !dir) {
     // No dirname whatsoever
@@ -47,3 +47,5 @@ PathCompatibility.dirname = function(path) {
 function posixSplitPath(filename) {
   return splitPathRe.exec(filename).slice(1);
 }
+
+exports.PathCompatibility = PathCompatibility
