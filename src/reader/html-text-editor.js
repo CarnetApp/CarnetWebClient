@@ -11,6 +11,7 @@ class HTMLTextEditor extends TextEditor {
     init() {
         this.oEditor = document.getElementById("editor");
         this.oCenter = document.getElementById("center");
+        document.getElementById("markdown-switch").parentElement.style.display="none"
 
 
     }

@@ -256,6 +256,7 @@ Writer.prototype.sendFiles = function (files, callback) {
     var writer = this;
     RequestBuilder.sRequestBuilder.postFiles("/note/open/" + this.saveID + "/addMedia", {
         path: this.note.path,
+        isMarkdown: this.note.isMarkdown
     }, files, function (error, data) {
         if (error) {
 
@@ -1599,6 +1600,7 @@ function init() {
     })
     if (writer == undefined) {
         writer = new Writer(document);
+        window.writer = writer
         writer.init();
     }
 

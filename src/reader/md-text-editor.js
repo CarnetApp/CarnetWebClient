@@ -85,6 +85,7 @@ class MDTextEditor extends TextEditor {
     this.oCenter = document.getElementById("center");
     this.markdownSwitch = document.getElementById("markdown-switch")
     let editor = this
+    this.markdownSwitch.parentElement.style.display="inline-block"
     this.markdownSwitch.onchange = function () {
       console.log("onchange")
       if (editor.markdownSwitch.checked)
