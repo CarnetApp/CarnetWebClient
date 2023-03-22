@@ -36,7 +36,7 @@ class HTMLTextEditor extends TextEditor {
         var name = FileUtils.stripExtensionFromName(FileUtils.getFilename(this.note.path))
         document.getElementById("name-input").value = name.startsWith("untitled") ? "" : name
         this.oCenter.addEventListener("scroll", function () {
-            lastscroll = $(writer.oCenter).scrollTop()
+            editor.writer.lastscroll = $(editor.oCenter).scrollTop()
         })
         this.oDoc = document.getElementById("text");
         this.oDoc.contentEditable = false
