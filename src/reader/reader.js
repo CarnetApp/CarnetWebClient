@@ -21,7 +21,6 @@ var Writer = function (elem) {
     this.elem = elem;
     this.seriesTaskExecutor = new SeriesTaskExecutor();
     this.saveNoteTask = new SaveNoteTask(this)
-    this.manager = new TodoListManager(document.getElementById("text"))
 
     resetScreenHeight();
     console.log("create Writer")
@@ -345,7 +344,6 @@ Writer.prototype.extractNote = function (callback) {
         $("#toolbar").scrollLeft(500)
         $("#toolbar").animate({ scrollLeft: '0' }, 2000);
 
-        writer.manager = new TodoListManager(this.oDoc)
         /* writer.oDoc.addEventListener('remove-todolist', function (e) {
              e.previous.innerHTML += "<br />" + e.next.innerHTML
              $(e.next).remove()
@@ -355,10 +353,8 @@ Writer.prototype.extractNote = function (callback) {
              writer.hasTextChanged = true;
          }, false);
          */
-        if (writer.note.metadata.todolists != undefined)
-            writer.manager.fromData(writer.note.metadata.todolists)
-        console.log("todo " + writer.note.metadata.todolists)
-        console.log(writer.note.metadata.todolists)
+      
+
 
 
         var ratingStars = document.querySelectorAll("input.star")
@@ -858,10 +854,7 @@ Writer.prototype.init = function () {
                     writer.increaseFontSize();
                     break;
                 case "todolist-button":
-                    writer.manager.createTodolist().createItem("")
-                    writer.createEditableZone().onclick = function (event) {
-                        writer.onEditableClick(event);
-                    }
+                    writer.textEditor.createTodoList()
                     break;
                 case "options-button":
                     document.getElementById("options-dialog").showModal()
@@ -1502,7 +1495,7 @@ SaveNoteTask.prototype.trySave = function (onEnd, trial) {
     if (this.writer.note.metadata.creation_date === "")
         this.writer.note.metadata.creation_date = Date.now();
 
-    this.writer.note.metadata.todolists = this.writer.manager.toData()
+    this.writer.note.metadata.todolists = this.writer.textEditor.getTodoListData()
     this.writer.note.metadata.last_modification_date = Date.now();
     RequestBuilder.sRequestBuilder.post("/note/saveText", {
         id: this.writer.saveID,
