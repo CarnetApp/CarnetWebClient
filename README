@@ -15,6 +15,13 @@ cd carnet
 git clone https://github.com/CarnetApp/CarnetWebClient
 current=`pwd`
 cd CarnetWebClient
-yarn install 
-cd $current
+yarn install
 ```
+
+Then, to build:
+
+```
+yarn run webpack
+```
+
+result client will be in dist/
