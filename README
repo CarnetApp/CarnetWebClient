@@ -1,0 +1,20 @@
+
+## Development
+
+### Prepare your environment
+
+To start developping Carnet, you will need nodejs and yarn 
+
+Then, from your favorite dev folder:
+
+Create a carnet folder where all the dev for server and clients will happen:
+
+```
+mkdir carnet
+cd carnet
+git clone https://github.com/CarnetApp/CarnetWebClient
+current=`pwd`
+cd CarnetWebClient
+yarn install 
+cd $current
+```
