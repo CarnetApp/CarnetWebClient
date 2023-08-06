@@ -960,8 +960,6 @@ UISettingsHelper.getInstance().loadSettings(function (settings, fromCache) {
 
 compatibility.loadLang(function () {
     $('body').i18n();
-    console.oldlog("lang loaded")
-
 })
 
 

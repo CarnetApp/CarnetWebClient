@@ -5,7 +5,7 @@
   "license": "GPLv3",
   "scripts": {
     "postinstall": "install-app-deps",
-    "webpack": "webpack",
+    "webpack": "bash compile.sh electron .  && webpack",
     "android": "webpack && rm ../CarnetAndroid/app/src/main/assets/reader -r && cp dist ../CarnetAndroid/app/src/main/assets/reader -R",
     "start": "npm install && electron .",
     "pack": "electron-builder --dir",

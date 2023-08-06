@@ -112,5 +112,7 @@
     "import_finished": "Import finished",
     "preload_editor": "Preload editor for faster load",
     "import_error": "An error occurred while importing",
-    "import_success": "Import success"
+    "import_success": "Import success",
+    "use_md_editor": "Use Markdown editor (beta)"
+
 }

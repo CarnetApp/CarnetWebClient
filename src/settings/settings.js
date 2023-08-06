@@ -9,8 +9,6 @@ const RequestBuilder = require("../requests/request_builder").RequestBuilder
 $(document).ready(function () {
   var frame;
   var currentPath;
-  alert(compatibility.isElectron)
-
   document.getElementById("select_note_path_button").onclick = function () {
     if (compatibility.isElectron) {
       const {
@@ -132,22 +130,22 @@ $(document).ready(function () {
   }
 
 
-  document.getElementById("use_note_folders").onchange = function (value) {
+  document.getElementById("use_md_editor").onchange = function (value) {
 
-    RequestBuilder.sRequestBuilder.post("/settings/note_folder", {
-      useFolder: value.target.checked
+    RequestBuilder.sRequestBuilder.post("/settings/use_md_editor", {
+      useMD: value.target.checked
     }, function (error, data) {
     })
   }
 
-  RequestBuilder.sRequestBuilder.get("/settings/note_folder", function (error, data) {
+  RequestBuilder.sRequestBuilder.get("/settings/use_md_editor", function (error, data) {
     if (data == "true" || data == true) {
 
-      document.getElementById("use_note_folders").checked = true
-      document.getElementById("use_note_folders").parentNode.classList.add("is-checked")
+      document.getElementById("use_md_editor").checked = true
+      document.getElementById("use_md_editor").parentNode.classList.add("is-checked")
     } else {
-      document.getElementById("use_note_folders").checked = false
-      document.getElementById("use_note_folders").parentNode.classList.remove("is-checked")
+      document.getElementById("use_md_editor").checked = false
+      document.getElementById("use_md_editor").parentNode.classList.remove("is-checked")
     }
   })
   document.getElementById("preload_editor").onchange = function (value) {
@@ -251,5 +249,12 @@ $(document).ready(function () {
   registerWriterEvent("exit", function () {
     document.getElementById("frame-container").style.display = "none"
   })
+  compatibility.loadLang(function () {
+    $('body').i18n();
+  })
+
+
+
+  $.i18n().locale = navigator.language;
 }
 )
