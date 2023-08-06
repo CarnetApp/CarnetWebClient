@@ -5,7 +5,8 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry:  {'browsers/browser': './src/browsers/browser.js', 
-  'reader/reader': "./src/reader/reader.js"},
+  'reader/reader': "./src/reader/reader.js",
+  'settings/settings': "./src/settings/settings.js"},
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
@@ -28,6 +29,12 @@ module.exports = {
       minify: false,
       chunks: ["mobileguide"],
   }),
+  new HtmlWebpackPlugin({
+    template: "./src/settings.html",
+    filename: "settings.html",
+    minify: false,
+    chunks: ["mobileguide"],
+}),
     new NodePolyfillPlugin(),
     new CopyPlugin({
       patterns: [

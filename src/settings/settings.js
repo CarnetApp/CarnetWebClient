@@ -1,7 +1,16 @@
+const SettingsCompatibility = require("../compatibility/compatibility-settings").SettingsCompatibility
+const compatibility = new SettingsCompatibility()
+compatibility.addNextcloudToken()
+const RecentDBManager = require("../recent/recent_db_manager").RecentDBManager
+const KeywordsDBManager = require("../keywords/keywords_db_manager").KeywordsDBManager
+const UISettingsHelper = require("../settings/ui_settings_helper").UISettingsHelper
+const RequestBuilder = require("../requests/request_builder").RequestBuilder
 
 $(document).ready(function () {
   var frame;
   var currentPath;
+  alert(compatibility.isElectron)
+
   document.getElementById("select_note_path_button").onclick = function () {
     if (compatibility.isElectron) {
       const {

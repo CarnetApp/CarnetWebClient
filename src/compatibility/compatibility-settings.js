@@ -1,10 +1,12 @@
+const Compatibility = require("./compatibility").Compatibility
+
 class SettingsCompatibility extends Compatibility {
     constructor() {
         super();
         var compatibility = this;
         $(document).ready(function () {
             if (compatibility.isElectron) {
-                var SettingsHelper = require("./server/settings_helper").SettingsHelper;
+            /*    var SettingsHelper = require("../server/settings_helper").SettingsHelper;
                 var settingsHelper = new SettingsHelper();
                 document.getElementById("window-frame-switch").checked = settingsHelper.displayFrame()
                 document.getElementById("window-frame-switch").onchange = function () {
@@ -34,7 +36,7 @@ class SettingsCompatibility extends Compatibility {
                     document.getElementById("connect").parentElement.style.display = "none";
                     document.getElementById("disconnect").parentElement.style.display = "block";
 
-                }
+                }*/
             } else {
                 document.getElementById("window-frame").parentElement.style.display = "none";
                 document.getElementById("connect").parentElement.style.display = "none";
@@ -52,7 +54,5 @@ class SettingsCompatibility extends Compatibility {
 
 }
 
-
-var compatibility = new SettingsCompatibility();
-
+exports.SettingsCompatibility = SettingsCompatibility
 
