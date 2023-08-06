@@ -36,6 +36,11 @@ class TextEditorView {
     }, function(text){
       editor.createMarkdownView(text)
     })
+    this.onInitEnd()
+  }
+
+  onInitEnd(){
+
   }
 
   parseMarkdown(markdown, onTodoList, onText){
@@ -210,6 +215,13 @@ class RawTextEditorView extends TextEditorView {
   }
   createTodoList(){
 
+  }
+
+  onInitEnd(){
+    let textEditor = this.textEditor
+    this.rawTextContainer.addEventListener("input", function () {
+      textEditor.hasTextChanged = true;
+    }, false);
   }
 
   createMarkdownView(content){
