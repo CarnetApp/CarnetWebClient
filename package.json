@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "install-app-deps",
     "webpack": "bash compile.sh electron .  && webpack",
-    "android": "webpack && rm ../CarnetAndroid/app/src/main/assets/reader -r && cp dist ../CarnetAndroid/app/src/main/assets/reader -R",
+    "android": "webpack && rm ../CarnetAndroid/app/src/main/assets/editor -r || true && cp dist ../CarnetAndroid/app/src/main/assets/editor                                    -R",
     "start": "npm install && electron .",
     "pack": "electron-builder --dir",
     "distapp": "electron-builder --x64 --ia32  --linux AppImage",
