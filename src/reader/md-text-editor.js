@@ -44,42 +44,6 @@ class TextEditorView {
   }
 
   parseMarkdown(markdown, onTodoList, onText){
-    /*let regex = /(\n\[todolist\](.+?)\[(\/todolist)\])/ig; //new RegExp('\\[todolist](.*?)\\[/todolist]');
-    let arr;
-    let lastIndex = 0
-    var i = 0;
-    var todolists = this.textEditor.writer.note.metadata.todolists
-   
-    while(arr = regex.exec(markdown)){
-      const index = markdown.indexOf(arr[1])
-      onText(markdown.substring(lastIndex, index))
-      console.log("creating todolist ?")
-      if (this.textEditor.writer.note.metadata.todolists != undefined ){
-        for(var j = 0; j < this.textEditor.writer.note.metadata.todolists.length; j++){
-          let todolist = this.textEditor.writer.note.metadata.todolists[j]
-          if(todolist.id != arr[2])
-            continue;
-          console.log("creating todolist ! splicing: "+todolists.indexOf(todolist))
-          onTodoList(todolist)
-          todolists.splice(todolists.indexOf(todolist), 1)
-        }
-      }
-      lastIndex = index + arr[1].length
-      console.log("todjjolist"+arr[2]); 
-      i++
-    
-    }
-    
-    onText(markdown.substring(lastIndex, markdown.length))
-    
-    for(var j = 0; j < todolists.length; j++){
-      console.log("creating todolist end "); 
-      let todolist = todolists[j]
-      onTodoList(todolist);
-
-      
-    }*/
-
     const lines = markdown.split("\n");
     var inTodoList = false
     var currentBlock = ""
