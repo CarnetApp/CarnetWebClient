@@ -1,5 +1,6 @@
 const CompatibilityEditor = require("../compatibility/compatibility-editor").CompatibilityEditor
 const FileUtils = require("../utils/file_utils").FileUtils
+const RequestBuilder = require("../requests/request_builder").RequestBuilder
 
 const compatibility = new CompatibilityEditor()
 compatibility.addNextcloudToken()
@@ -47,23 +48,23 @@ CarnetRecorder.prototype.init = function () {
         var test = carnetRecorder.currentUrl
         console.log("name " + FileUtils.getFilename(test))
 
-        this.writer.deleteMedia(carnetRecorder.name)
+        carnetRecorder.writer.deleteMedia(carnetRecorder.name)
       }
-      this.writer.recorderDialog.close()
+      carnetRecorder.writer.recorderDialog.close()
     }
     this.deleteButton.onclick = function () {
       if (carnetRecorder.hasRecorded) {
         console.log("click remove")
-        this.writer.genericDialog.querySelector(".action").onclick = function () {
+        carnetRecorder.writer.genericDialog.querySelector(".action").onclick = function () {
           deleteFunction()
-          this.writer.genericDialog.close()
+          carnetRecorder.writer.genericDialog.close()
         }
-        this.writer.genericDialog.querySelector(".cancel").onclick = function () {
-            this.writer.genericDialog.close()
+        carnetRecorder.writer.genericDialog.querySelector(".cancel").onclick = function () {
+          carnetRecorder.writer.genericDialog.close()
         }
-        this.writer.genericDialog.querySelector(".action").innerHTML = $.i18n("ok")
-        this.writer.genericDialog.querySelector(".content").innerHTML = $.i18n("delete_recording_confirmation")
-        this.writer.genericDialog.showModal()
+        carnetRecorder.writer.genericDialog.querySelector(".action").innerHTML = $.i18n("ok")
+        carnetRecorder.writer.genericDialog.querySelector(".content").innerHTML = $.i18n("delete_recording_confirmation")
+        carnetRecorder.writer.genericDialog.showModal()
       }
       else {
         deleteFunction()
@@ -73,7 +74,7 @@ CarnetRecorder.prototype.init = function () {
     }
     this.saveButton.onclick = function () {
 
-      this.writer.recorderDialog.close()
+      carnetRecorder.writer.recorderDialog.close()
     }
     var wavesurfer = WaveSurfer.create({
       container: '#waveform'
@@ -256,7 +257,7 @@ CarnetRecorder.prototype.init = function () {
         carnetRecorder.writer.sendFiles([dataBlob], function (list) {
           for (var i = 0; i < list.length; i++) {
             if (list[i].endsWith(fileName)) {
-              carnetRecorder.currentUrl = api_url + list[i]
+              carnetRecorder.currentUrl = RequestBuilder.sRequestBuilder.api_url + list[i]
               carnetRecorder.name = FileUtils.getFilename(list[i])
               console.log("current url " + carnetRecorder.currentUrl)
               break;

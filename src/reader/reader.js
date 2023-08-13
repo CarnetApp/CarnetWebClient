@@ -15,7 +15,6 @@ const HTMLTextEditor = require("./html-text-editor").HTMLTextEditor
 const MDTextEditor = require("./md-text-editor").MDTextEditor
 
 var rootpath = undefined;
-var api_url = undefined;
 
 var Writer = function (elem) {
     this.elem = elem;
@@ -911,7 +910,7 @@ Writer.prototype.init = function () {
     }
 
     document.getElementById("share-button").onclick = function () {
-        writer.openInFrame(rootpath + "exporter/exporter.html?path=" + writer.note.path + "&api_path=" + api_url)
+        writer.openInFrame(rootpath + "exporter/exporter.html?path=" + writer.note.path + "&api_path=" + RequestBuilder.sRequestBuilder.api_url)
     }
     document.getElementById("note-color-button").onclick = function () {
         document.getElementById("note-color-picker-dialog").showModal()
@@ -1578,7 +1577,7 @@ function init() {
     isElectron = compatibility.isElectron;
     console.log("isElectron " + isElectron)
     rootpath = document.getElementById("root-url").innerHTML.trim();
-    api_url = document.getElementById("api-url").innerHTML.trim();
+    var api_url = document.getElementById("api-url").innerHTML.trim();
 
     new RequestBuilder(api_url);
     RequestBuilder.sRequestBuilder.get("/settings/editor_css", function (error, data) {
