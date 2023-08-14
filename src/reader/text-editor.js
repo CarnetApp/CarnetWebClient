@@ -20,6 +20,10 @@ class TextEditor {
     onLoaded() { }
 
     focusAtTheEnd() { }
+
+    getTodoListData() {}
+
+    createTodoList() {}
 }
 
 exports.TextEditor = TextEditor
