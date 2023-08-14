@@ -165,7 +165,7 @@ NoteCardView.prototype.setNote = function (note) {
             else
                 img.src = preview
             img.onload = function () {
-                browser.noteCardViewGrid.msnry.layout();
+                noteView.masonry.layout();
                 noteView.toggleDisplayMore()
             }
             this.cardMedias.appendChild(img);

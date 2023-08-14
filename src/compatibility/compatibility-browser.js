@@ -2,8 +2,14 @@ const Compatibility = require("./compatibility").Compatibility
 class BrowserCompatibility extends Compatibility {
     constructor() {
         super();
+    }
+
+    /* set UI and listeners, must be run only once. */
+
+    setBrowserPage(){
         var compatibility = this;
         $(document).ready(function () {
+
             if (compatibility.isGtk) {
                 document.getElementsByClassName('mdl-layout__header')[0].style.display = "none"
                 document.getElementById('grid-button-container').style.display = "none"
@@ -136,7 +142,6 @@ class BrowserCompatibility extends Compatibility {
 
             }
         });
-
     }
 
     onFirstrunEnds() {
@@ -159,11 +164,6 @@ class BrowserCompatibility extends Compatibility {
         else return Masonry;
     }
 }
-
-
-var compatibility = new BrowserCompatibility();
-
-var Store = compatibility.getStore();
 
 exports.BrowserCompatibility = BrowserCompatibility
 

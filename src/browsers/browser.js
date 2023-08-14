@@ -5,6 +5,7 @@ const NoteCardViewGrid = require("./note_card_view").NoteCardViewGrid
 const Store = require("../compatibility/nextcloud/store").NextcloudStore
 const BrowserCompatibility = require("../compatibility/compatibility-browser").BrowserCompatibility
 const compatibility = new BrowserCompatibility()
+compatibility.setBrowserPage()
 compatibility.addNextcloudToken()
 const RecentDBManager = require("../recent/recent_db_manager").RecentDBManager
 const KeywordsDBManager = require("../keywords/keywords_db_manager").KeywordsDBManager
@@ -649,7 +650,7 @@ function getNotePath() {
 }
 
 function loadNextNotes() {
-    browser.noteCardViewGrid.addNext(15);
+    noteCardViewGrid.addNext(15);
     currentTask.stopAt += 15;
     currentTask.getNext()
 }
