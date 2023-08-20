@@ -13,6 +13,7 @@ const CarnetRecorder = require("./carnet-recorder").CarnetRecorder
 const RemindersDialog = require("./reminders").RemindersDialog
 const HTMLTextEditor = require("./html-text-editor").HTMLTextEditor
 const MDTextEditor = require("./md-text-editor").MDTextEditor
+const Mark = require("./text-editor").Mark
 
 var rootpath = undefined;
 
@@ -832,13 +833,22 @@ Writer.prototype.init = function () {
             console.log("on click " + this.id);
             switch (this.id) {
                 case "bold":
-                    writer.textEditor.toggleBold()
+                    writer.textEditor.toggleMark(Mark.Bold)
+                    break;
                 case "italic":
+                    writer.textEditor.toggleMark(Mark.Italic)
+                    break;
                 case "underline":
+                    writer.textEditor.toggleMark(Mark.Underline)
+                    break;
                 case "justifyleft":
+                    writer.textEditor.toggleMark(Mark.AlignLeft)
+                    break;
                 case "justifycenter":
+                    writer.textEditor.toggleMark(Mark.AlignCenter)
+                    break;
                 case "justifyright":
-                    writer.formatDoc(this.id);
+                    writer.textEditor.toggleMark(Mark.AlignRight)
                     break;
                 case "text-color":
                     writer.displayTextColorPicker();

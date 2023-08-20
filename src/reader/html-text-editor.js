@@ -1,6 +1,7 @@
 const { FileUtils } = require("../utils/file_utils");
 const { TextEditor } = require("./text-editor");
 TodoListManager = require("./todolist").TodoListManager
+const Mark = require("./text-editor").Mark;
 class HTMLTextEditor extends TextEditor {
 
     constructor(writer) {
@@ -93,6 +94,25 @@ class HTMLTextEditor extends TextEditor {
             this.todoListManager.fromData(note.metadata.todolists)
 
 
+    }
+
+    formatDoc (sCmd, sValue) {
+        this.oEditor.focus();
+        document.execCommand(sCmd, false, sValue);
+        this.oEditor.focus();
+    }
+
+    toggleMark(mark){
+        switch (mark) {
+            case Mark.Bold:
+            case Mark.Italic:
+            case Mark.Underline:
+            case Mark.AlignLeft:
+            case Mark.AlignCenter:
+            case Mark.AlignRight:
+                this.formatDoc(mark);
+                break;
+        }
     }
 
     getContent() {

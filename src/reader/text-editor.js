@@ -1,6 +1,16 @@
 const { Note } = require("../browsers/note")
 
 
+const Mark = {
+    Bold: 'bold',
+    Italic: 'italic',
+    Underline: 'underline',
+    Strike: 'strike',
+    AlignLeft: 'justifyleft',
+    AlignRight: 'justifyright',
+    AlignCenter: 'justifycenter'
+  };
+
 class TextEditor {
 
     init() {
@@ -14,7 +24,7 @@ class TextEditor {
         return ""
     }
 
-    toggleBold() {
+    toggleMark(mark ) {
 
     }
     onLoaded() { }
@@ -27,3 +37,4 @@ class TextEditor {
 }
 
 exports.TextEditor = TextEditor
+exports.Mark = Mark

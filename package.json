@@ -73,6 +73,7 @@
   "dependencies": {
     "@electron/remote": "^2.0.4",
     "@tiptap/core": "^2.0.3",
+    "@tiptap/extension-underline": "^2.1.6",
     "@tiptap/pm": "^2.0.3",
     "@tiptap/starter-kit": "^2.0.3",
     "archiver": "^5.3.0",
