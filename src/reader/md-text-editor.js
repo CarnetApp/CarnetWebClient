@@ -236,16 +236,23 @@ class WYSIWYGTextEditorView extends TextEditorView {
           break;
         }
       }
-      textEditor.hasTextChanged = true
+      if(textEditor.isInit)
+        textEditor.hasTextChanged = true
     })
 
     textEditor.oEditor.addEventListener("todolist-changed", function(event){
-      textEditor.hasTextChanged = true
+      if(textEditor.isInit)
+        textEditor.hasTextChanged = true
     })
   }
 
   init(){
     this.textEditor.resetEditor()
+    this.isInit = false
+  }
+
+  onInitEnd(){
+    this.isInit = true
   }
 
   getTodoListData(){
@@ -277,7 +284,8 @@ class WYSIWYGTextEditorView extends TextEditorView {
           StarterKit,
       ],
       onUpdate({ view }) {
-        editor.textEditor.hasTextChanged = true
+        if(editor.isInit)
+          editor.textEditor.hasTextChanged = true
       }      
   })
     this.views.push(md);
