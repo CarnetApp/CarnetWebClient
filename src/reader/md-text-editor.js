@@ -387,7 +387,7 @@ class MDTextEditor extends TextEditor {
   }
 
   getAbilities(){
-    return "B,I,U,H3,H2,H1,TD"
+    return "B,I,H3,H2,H1,TD"
   }
 }
 

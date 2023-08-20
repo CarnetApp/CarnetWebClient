@@ -41,7 +41,6 @@ class Toolbar {
       var button = inToolbarButtons[i];
 
       button.onclick = function (ev) {
-        console.log("on click " + this.id);
         switch (this.id) {
           case "bold":
             writer.textEditor.toggleMark(Mark.Bold);
