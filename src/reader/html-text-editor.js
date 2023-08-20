@@ -4,9 +4,11 @@ TodoListManager = require("./todolist").TodoListManager
 const Mark = require("./text-editor").Mark;
 class HTMLTextEditor extends TextEditor {
 
-    constructor(writer) {
+    constructor(writer, toolbar) {
         super()
         this.writer = writer
+        this.toolbar = toolbar
+        toolbar.setAbilities(this.getAbilities())
         
     }
 
@@ -186,6 +188,10 @@ class HTMLTextEditor extends TextEditor {
             textRange.collapse(false);
             textRange.select();
         }
+    }
+
+    getAbilities(){
+        return "B,I,U,AL,AC,AR,P,M,FC,BC,TD"
     }
 }
 

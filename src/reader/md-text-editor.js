@@ -2,8 +2,7 @@ const { FileUtils } = require("../utils/file_utils");
 const { TextEditor } = require("./text-editor");
 const { Editor } = require("@tiptap/core");
 const { StarterKit } = require("@tiptap/starter-kit");
-const {Underline} = require("@tiptap/extension-underline")
-const { hasUncaughtExceptionCaptureCallback } = require("process");
+const { Underline } = require("@tiptap/extension-underline");
 const { createMarkdownEditor } = require("tiptap-markdown");
 const TodoListManager = require("./todolist").TodoListManager;
 const Mark = require("./text-editor").Mark;
@@ -269,13 +268,6 @@ class WYSIWYGTextEditorView extends TextEditorView {
       case Mark.Bold:
         this.currentFocused.commands.toggleBold();
         break;
-      case Mark.Bold:
-        this.currentFocused.commands.toggleBold();
-        break;
-
-      case Mark.Bold:
-        this.currentFocused.commands.toggleBold();
-        break;
     }
   }
 
@@ -334,8 +326,10 @@ class WYSIWYGTextEditorView extends TextEditorView {
 }
 
 class MDTextEditor extends TextEditor {
-  constructor(writer) {
+  constructor(writer, toolbar) {
     super();
+    this.toolbar = toolbar
+    this.toolbar.setAbilities(this.getAbilities())
     this.writer = writer;
     this.hasTextChanged = true;
   }
@@ -390,6 +384,10 @@ class MDTextEditor extends TextEditor {
 
   createTodoList() {
     this.view.createTodoList();
+  }
+
+  getAbilities(){
+    return "B,I,U,H3,H2,H1,TD"
   }
 }
 

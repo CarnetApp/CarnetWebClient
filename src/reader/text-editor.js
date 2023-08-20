@@ -34,6 +34,13 @@ class TextEditor {
     getTodoListData() {}
 
     createTodoList() {}
+
+    /*
+        @ref Toolbar.setAbilities
+    */
+    getAbilities(){
+        return ""
+    }
 }
 
 exports.TextEditor = TextEditor

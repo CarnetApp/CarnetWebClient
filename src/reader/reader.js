@@ -3,17 +3,18 @@ const Utils = require("../utils/utils").Utils
 const FileUtils = require("../utils/file_utils").FileUtils
 const RequestBuilder = require("../requests/request_builder").RequestBuilder
 const CompatibilityEditor = require("../compatibility/compatibility-editor").CompatibilityEditor
+
 const compatibility = new CompatibilityEditor()
 compatibility.addNextcloudToken()
 const KeywordsDBManager = require("../keywords/keywords_db_manager").KeywordsDBManager
 const FileBrowser = require("../browsers/file-browser").FileBrowser
 const { Note, NoteMetadata } = require("../browsers/note")
+const { Toolbar } = require("./toolbar")
 const TodoListManager = require("./todolist").TodoListManager
 const CarnetRecorder = require("./carnet-recorder").CarnetRecorder
 const RemindersDialog = require("./reminders").RemindersDialog
 const HTMLTextEditor = require("./html-text-editor").HTMLTextEditor
 const MDTextEditor = require("./md-text-editor").MDTextEditor
-const Mark = require("./text-editor").Mark
 
 var rootpath = undefined;
 
@@ -21,6 +22,7 @@ var Writer = function (elem) {
     this.elem = elem;
     this.seriesTaskExecutor = new SeriesTaskExecutor();
     this.saveNoteTask = new SaveNoteTask(this)
+    this.toolbar = new Toolbar(this)
 
     resetScreenHeight();
     console.log("create Writer")
@@ -327,9 +329,9 @@ Writer.prototype.extractNote = function (callback) {
 
         writer.note.isMarkdown = data.isMarkdown || data.isNew
         if (writer.note.isMarkdown)
-            writer.textEditor = new MDTextEditor(writer)
+            writer.textEditor = new MDTextEditor(writer, writer.toolbar)
         else
-            writer.textEditor = new HTMLTextEditor(writer)
+            writer.textEditor = new HTMLTextEditor(writer, writer.toolbar)
         writer.textEditor.init()
         writer.textEditor.setNoteAndContent(writer.note, data.html)
         //writer.oDoc = document.getElementById("text")
@@ -734,22 +736,7 @@ Writer.prototype.init = function () {
     });
 
     ;
-    /*this.toolbarManager = new ToolbarManager()
-    var toolbarManager = this.toolbarManager
-    var toolbars = document.getElementsByClassName("toolbar")
-    for (var i = 0; i < toolbars.length; i++) {
-        this.toolbarManager.addToolbar(toolbars[i]);
-    };
-    var toolbarButtons = document.getElementsByClassName("toolbar-button")
-    for (var i = 0; i < toolbarButtons.length; i++) {
-        var toolbar = toolbarButtons[i]
-        console.log("tool " + toolbar.getAttribute("for"))
 
-        toolbar.addEventListener("click", function (event) {
-            console.log("display " + event.target.getAttribute("for"))
-            toolbarManager.toggleToolbar(document.getElementById(event.target.getAttribute("for")))
-        });
-    };*/
     this.searchInput = document.getElementById("search-input");
     this.searchInput.onfocus = function () {
         var el = document.getElementById('container-button');
@@ -823,81 +810,8 @@ Writer.prototype.init = function () {
             }
         }
     }
+    this.toolbar.init()
 
-    var inToolbarButtons = document.getElementsByClassName("in-toolbar-button");
-
-    for (var i = 0; i < inToolbarButtons.length; i++) {
-        var button = inToolbarButtons[i];
-
-        button.onclick = function (ev) {
-            console.log("on click " + this.id);
-            switch (this.id) {
-                case "bold":
-                    writer.textEditor.toggleMark(Mark.Bold)
-                    break;
-                case "italic":
-                    writer.textEditor.toggleMark(Mark.Italic)
-                    break;
-                case "underline":
-                    writer.textEditor.toggleMark(Mark.Underline)
-                    break;
-                case "justifyleft":
-                    writer.textEditor.toggleMark(Mark.AlignLeft)
-                    break;
-                case "justifycenter":
-                    writer.textEditor.toggleMark(Mark.AlignCenter)
-                    break;
-                case "justifyright":
-                    writer.textEditor.toggleMark(Mark.AlignRight)
-                    break;
-                case "text-color":
-                    writer.displayTextColorPicker();
-                    break;
-                case "fill-color":
-                    writer.displayFillColorPicker();
-                    break;
-                case "size-minus":
-                    writer.decreaseFontSize();
-                    break;
-                case "size-plus":
-                    writer.increaseFontSize();
-                    break;
-                case "todolist-button":
-                    writer.textEditor.createTodoList()
-                    break;
-                case "options-button":
-                    document.getElementById("options-dialog").showModal()
-                    break;
-                case "open-second-toolbar":
-                    document.getElementById("toolbar").classList.add("more")
-                    $("#toolbar").scrollLeft(0)
-                    break;
-                case "close-second-toolbar":
-                    document.getElementById("toolbar").classList.remove("more")
-                    $("#toolbar").scrollLeft(0)
-                    break
-                case "copy-button":
-                    writer.copy();
-                    break;
-                case "paste-button":
-                    writer.paste();
-                    break;
-                case "select-all-button":
-                    document.execCommand("selectAll");
-                    break;
-                case "fullscreen-media-button":
-                    writer.mediaToolbar.classList.add("fullscreen-media-toolbar")
-                    var layout = document.getElementsByClassName("mdl-layout")[0]
-                    layout.classList.remove("mdl-layout--fixed-drawer")
-                    document.getElementsByTagName("header")[0].style.zIndex = "unset";
-                    break;
-                case "back-to-text-button":
-                    writer.closeFullscreenMediaToolbar();
-
-                    break;
-            }
-        };
-    }
 
     this.keywordsList = document.getElementById("keywords")
 
