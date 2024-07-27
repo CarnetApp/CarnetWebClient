@@ -1546,6 +1546,7 @@ function init() {
         $('body').i18n();
     })
     $.i18n().locale = navigator.language;
+    compatibility.postMessage("editor_ready")
 
 }
 $(window).on('touchstart', function (e) {

@@ -12,6 +12,9 @@ const KeywordsDBManager = require("../keywords/keywords_db_manager").KeywordsDBM
 const UISettingsHelper = require("../settings/ui_settings_helper").UISettingsHelper
 const FileBrowser = require("./file-browser").FileBrowser
 const Note = require("./note").Note
+
+const EditorWrapper = require("./editor_wrapper").EditorWrapper
+
 var initPath = "recentdb://"
 var currentPath;
 var currentTask = undefined;
@@ -87,62 +90,66 @@ String.prototype.replaceAll = function (search, replacement) {
     return target.replace(new RegExp(search, 'g'), replacement);
 };
 
-function onPrepared(error, data, notePath, action) {
+function loadEditor(onEditorLoaded){
+    console.log("preloading")
+    if(!editorWrapper.isLoading && !editorWrapper.isLoaded ){
+        editorWrapper.isLoading= true
+
+        editorWrapper.registerWriterEvent("editor_ready", function () { 
+                console.log("preloading")
+
+            editorWrapper.isLoading = false
+            editorWrapper.isLoaded = true
+            onEditorLoaded()
+        })
+        if (compatibility.isElectron) {
+            RequestBuilder.sRequestBuilder.get("/note/open/prepare", function (error, url) {
+                const remote = require('@electron/remote');
+                var main = remote.require("./main");
+                main.enableEditorWebContent(document.getElementById("writer-webview").getWebContentsId())
+               // editorWrapper.editorIFrame.openDevTools()
+                editorWrapper.editorIFrame.send('remote_ready', undefined);
+                editorWrapper.editorIFrame.src = url
+            })
+        }
+        else {//no need to call prepare, always the same on nextcloud
+            editorWrapper.editorIFrame.src = "./writer"
+        }
+
+    } else if (editorWrapper.isLoaded){
+        onEditorLoaded()
+    }
+
+}
+
+function onEditorExtracted(error, data, notePath, action) {
     if (error)
         return;
 
-    if (writerFrame.src == "") {
-            if (notePath !== undefined) {
-                $("#editor-container").show()
-                $(loadingView).fadeIn(function () {
-                    writerFrame.style.display = "inline-flex"
-                    if(compatibility.isElectron){
-                        writerFrame.addEventListener("dom-ready", () => {
-                            const remote = require('@electron/remote');
-                            var main = remote.require("./main");
-                            main.enableEditorWebContent(document.getElementById("writer-webview").getWebContentsId())
-                           // writerFrame.openDevTools()
-                            writerFrame.send('remote_ready', undefined);
-                        })
-                    }
-                    writerFrame.src = data + (notePath != undefined ? ("?path=" + encodeURIComponent(notePath) + (action != undefined ? "&action=" + action : "")) : "");
-
-                    
-
-                })
-            }
-    
-    }
+   
     else {
         console.log("reuse old iframe");
-        $("#editor-container").show()
-        if (compatibility.isElectron) {
-            writerFrame.send('loadnote', notePath);
-            writerFrame.send('action', action);
-        }
-        else{
-            writerFrame.contentWindow.loadPath(notePath, action);
-        }
-            
-        $(loadingView).fadeIn(function () {
 
-        writerFrame.style.display = "inline-flex"
-
-        })
     }
 }
 
 function openNote(notePath, action) {
-    isLoadCanceled = false;
-    currentNotePath = notePath
-    if (compatibility.isElectron) {
-        RequestBuilder.sRequestBuilder.get("/note/open/prepare", function (error, url) {
-            onPrepared(error, url, notePath, action)
+    $("#editor-container").show()
+    $(loadingView).fadeIn(function () {
+        isLoadCanceled = false;
+        currentNotePath = notePath      
+        loadEditor(function () {
+            if (compatibility.isElectron) {
+                editorWrapper.editorIFrame.send('loadnote', notePath);
+                editorWrapper.editorIFrame.send('action', action);
+            }
+            else{
+                editorWrapper.editorIFrame.contentWindow.loadPath(notePath, action);
+            }
+            editorWrapper.editorIFrame.style.display = "inline-flex"
+            
         })
-    }
-    else {//no need to call, always the same on nextcloud
-        onPrepared(undefined, "./writer", notePath, action)
-    }
+    })
 }
 
 var displaySnack = function (data) {
@@ -197,7 +204,7 @@ function resetGrid(discret) {
     this.noteCardViewGrid = noteCardViewGrid;
     noteCardViewGrid.onFolderClick(function (folder) {
         list(folder.path)
-    })
+    })  
     noteCardViewGrid.onTodoListChange = function (note) {
         RequestBuilder.sRequestBuilder.post("/notes/metadata", {
             path: note.path,
@@ -512,8 +519,7 @@ function onListEnd(pathToList, files, metadatas, discret, force, fromCache) {
 
         }
         if (!fromCache && shouldPreloadEditor) {
-            openNote(undefined, undefined)
-            console.log("preloading")
+            loadEditor(undefined)
             shouldPreloadEditor = false
         }
 
@@ -610,14 +616,14 @@ function closeW() {
 })*/
 
 document.getElementById("add-note-button").onclick = function () {
-    createAndOpenNote();
+    createNewNote();
 }
 
 document.getElementById("add-record-button").onclick = function () {
-    createAndOpenNote("record-audio");
+    createNewNote("record-audio");
 }
 
-function createAndOpenNote(action) {
+function createNewNote(action) {
     var path = currentPath;
     if (path == "recentdb://" || path.startsWith("keyword://"))
         path = "";
@@ -721,50 +727,11 @@ const right = document.getElementById("right-bar");
 //writer frame
 
 var isElectron = compatibility.isElectron;
-var writerFrame = undefined;
-var events = []
-
-if (isElectron) {
-    writerFrame = document.getElementById("writer-webview");
-
-    writerFrame.addEventListener('ipc-message', event => {
-        if (events[event.channel] !== undefined) {
-            for (var callback of events[event.channel])
-                callback();
-        }
-    });
-
-} else {
-    writerFrame = document.getElementById("writer-iframe");
-    //iframe events
-
-    var eventMethod = window.addEventListener ?
-        "addEventListener" :
-        "attachEvent";
-    var eventer = window[eventMethod];
-    var messageEvent = eventMethod === "attachEvent" ?
-        "onmessage" :
-        "message";
-    eventer(messageEvent, function (e) {
-        if (events[e.data] !== undefined) {
-            for (var callback of events[e.data])
-                callback();
-        }
-
-    });
-}
-
-function registerWriterEvent(event, callback) {
-    if (events[event] == null) {
-        events[event] = []
-    }
-    events[event].push(callback)
-
-}
+var editorWrapper = new EditorWrapper(compatibility);
 
 
-registerWriterEvent("exit", function () {
-    $(writerFrame).fadeOut();
+editorWrapper.registerWriterEvent("exit", function () {
+    $(editorWrapper.editorIFrame).fadeOut();
     $("#editor-container").hide()
     $("#drag-bar").show()
     setDraggable(true)
@@ -784,7 +751,7 @@ registerWriterEvent("exit", function () {
 
 var isLoadCanceled = false;
 
-registerWriterEvent("loaded", function () {
+editorWrapper.registerWriterEvent("loaded", function () {
     if (!isLoadCanceled) {
         $(loadingView).fadeOut()
         $("#drag-bar").hide()
@@ -793,7 +760,7 @@ registerWriterEvent("loaded", function () {
     }
 })
 
-registerWriterEvent("error", function () {
+editorWrapper.registerWriterEvent("error", function () {
     hideEditor()
 })
 
@@ -807,7 +774,7 @@ function setDraggable(draggable) {
 function hideEditor() {
     isLoadCanceled = true;
     $(loadingView).fadeOut()
-    $(writerFrame).fadeOut();
+    $(editorWrapper.editorIFrame).fadeOut();
     $("#editor-container").hide()
     $("#drag-bar").show()
     setDraggable(true)

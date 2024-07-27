@@ -51,6 +51,23 @@ class CompatibilityEditor extends Compatibility {
         return new Recorder(options);
     }
 
+
+    postMessage(message){
+        if (this.isGtk) {
+            document.getElementsByClassName('mdl-layout__header')[0].style.display = "none"
+            window.parent.document.title = "msgtopython:::"+message
+        }
+        if (this.isElectron) {
+            const {
+                ipcRenderer
+            } = require('electron')
+            ipcRenderer.sendToHost(message, "")
+        } else if (this.isAndroid) {
+            app.hideProgress();
+        } else {
+            parent.postMessage(message, "*")
+        }
+    }
     onNoteLoaded() {
         if (this.isGtk) {
             document.getElementsByClassName('mdl-layout__header')[0].style.display = "none"
@@ -75,7 +92,6 @@ class CompatibilityEditor extends Compatibility {
             })
         }
         else {
-            console.log("isDefinitivetyelectron")
             var ipcRenderer = require('electron').ipcRenderer;
             ipcRenderer.on('remote_ready', function (event, path) {
                 callback()
