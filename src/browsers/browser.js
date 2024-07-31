@@ -89,18 +89,20 @@ String.prototype.replaceAll = function (search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
 };
-
-function loadEditor(onEditorLoaded){
+function loadEditor(newOnEditorLoadedCallback){
     console.log("preloading")
+    if(newOnEditorLoadedCallback != undefined)
+        editorWrapper.onEditorLoaded = newOnEditorLoadedCallback
     if(!editorWrapper.isLoading && !editorWrapper.isLoaded ){
         editorWrapper.isLoading= true
 
         editorWrapper.registerWriterEvent("editor_ready", function () { 
-                console.log("preloading")
+            console.log("editor_ready")
 
             editorWrapper.isLoading = false
             editorWrapper.isLoaded = true
-            onEditorLoaded()
+            if(editorWrapper.onEditorLoaded != undefined)
+                editorWrapper.onEditorLoaded()
         })
         if (compatibility.isElectron) {
             RequestBuilder.sRequestBuilder.get("/note/open/prepare", function (error, url) {
@@ -117,7 +119,8 @@ function loadEditor(onEditorLoaded){
         }
 
     } else if (editorWrapper.isLoaded){
-        onEditorLoaded()
+        if(editorWrapper.onEditorLoaded != undefined)
+            editorWrapper.onEditorLoaded()
     }
 
 }
