@@ -52,6 +52,10 @@
     color: var(--fab-color)
 }
 
+#grid-button-container button{
+    text-transform: unset;
+}
+
 body{
     background: var(--grid-bg)
 }

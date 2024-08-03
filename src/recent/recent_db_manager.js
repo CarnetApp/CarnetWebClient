@@ -79,6 +79,7 @@ RecentDBManager.getInstance = function () {
 }
 
 RecentDBManager.prototype.addToDB = function (path, callback) {
+    if(RecentDBManager.getInstance().lastDb != undefined)
     RecentDBManager.getInstance().lastDb.push(path)
     this.action(path, "add", callback)
 }

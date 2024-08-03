@@ -622,23 +622,36 @@ document.getElementById("add-note-button").onclick = function () {
     createNewNote();
 }
 
+document.getElementById("add-note-md-button").onclick = function () {
+    createNewNote(undefined, true);
+}
+
 document.getElementById("add-record-button").onclick = function () {
     createNewNote("record-audio");
 }
 
-function createNewNote(action) {
+
+function createNewNote(action, isMarkdown = false) {
+    //for legacy editor
+    wasNewNote = true
     var path = currentPath;
     if (path == "recentdb://" || path.startsWith("keyword://"))
         path = "";
-    RequestBuilder.sRequestBuilder.get("/note/create?path=" + encodeURIComponent(path), function (error, data) {
-        if (error) return;
-        console.log("found " + data)
-        wasNewNote = true;
-        var db = RecentDBManager.getInstance()
-        db.addToDB(data, function () {
-            openNote(data, action)
-        });
-
+    $("#editor-container").show()
+    $(loadingView).fadeIn(function () {
+        isLoadCanceled = false;
+        loadEditor(function () {
+            if (compatibility.isElectron) {
+                editorWrapper.editorIFrame.send('createNewNote', path);
+                editorWrapper.editorIFrame.send('action', action);
+            }
+            else{
+                 editorWrapper.editorIFrame.contentWindow.createNewNote(path, action, isMarkdown);
+                 
+            }
+            editorWrapper.editorIFrame.style.display = "inline-flex"
+            
+        })
     })
 }
 

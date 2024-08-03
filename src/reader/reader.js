@@ -7,6 +7,8 @@ const CompatibilityEditor = require("../compatibility/compatibility-editor").Com
 const compatibility = new CompatibilityEditor()
 compatibility.addNextcloudToken()
 const KeywordsDBManager = require("../keywords/keywords_db_manager").KeywordsDBManager
+const RecentDBManager = require("../recent/recent_db_manager").RecentDBManager
+
 const FileBrowser = require("../browsers/file-browser").FileBrowser
 const { Note, NoteMetadata } = require("../browsers/note")
 const { Toolbar } = require("./toolbar")
@@ -326,8 +328,18 @@ Writer.prototype.extractNote = function (callback) {
         }
         else
             writer.note.metadata = data.metadata;
-
-        writer.note.isMarkdown = data.isMarkdown || data.isNew
+        if(data.isNew != writer.note.isNew){
+            //shouldn't happen
+            writer.displaySnack({
+                message: $.i18n("error_new"),
+                timeout: 60000 * 300,
+            })
+            writer.setDoNotEdit(true)
+            return
+        }
+        if(!data.isNew){ 
+            writer.note.isMarkdown = data.isMarkdown
+        }
         if (writer.note.isMarkdown)
             writer.textEditor = new MDTextEditor(writer, writer.toolbar)
         else
@@ -655,6 +667,8 @@ Writer.prototype.updateKeywordsListSelector = function (currentWord = "") {
 Writer.prototype.init = function () {
     var writer = this;
     this.recorder = new CarnetRecorder(this);
+    window.createNewNote = this.createNewNote
+
 
     window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
         if (errorMsg.indexOf("parentElement") >= 0) //ignore that one
@@ -1248,6 +1262,19 @@ Writer.prototype.onEditableClick = function (event) {
 
 }
 
+Writer.prototype.createNewNote = function(path, action, isMarkdown){
+    RequestBuilder.sRequestBuilder.get("/note/create?path=" + encodeURIComponent(path), function (error, data) {
+        if (error) return;
+        console.log("found " + data)
+        wasNewNote = true;
+        var db = RecentDBManager.getInstance()
+        db.addToDB(data, function () {
+            loadPath(data, action, true, isMarkdown)
+        });
+
+    })
+}
+
 var ToolbarManager = function () {
     this.toolbars = [];
 }
@@ -1477,11 +1504,13 @@ function resetScreenHeight() {
 }
 
 
-function loadPath(path, action) {
+function loadPath(path, action, isNewNote = false, isNewNoteMarkdown = false) {
     if (writer == undefined)
         return;
     writer.reset();
     var note = new Note("", "", path, undefined);
+    note.isNew = isNewNote
+    note.isMarkdown = isNewNoteMarkdown
     writer.setNote(note);
     console.log("extract")
     writer.extractNote(function () {
