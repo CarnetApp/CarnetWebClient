@@ -112,3 +112,4 @@ function stripExtensionFromName(name) {
 }
 
 exports.FileBrowser = FileBrowser;
+exports.File = File;

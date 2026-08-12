@@ -4,7 +4,7 @@ const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-  entry:  {'browsers/browser': './src/browsers/browser.js', 
+  entry:  {'browsers/browser': './src/browsers/browser.js',
   'reader/reader': "./src/reader/reader.js",
   'settings/settings': "./src/settings/settings.js"},
   output: {

@@ -11,6 +11,7 @@ const RecentDBManager = require("../recent/recent_db_manager").RecentDBManager
 const KeywordsDBManager = require("../keywords/keywords_db_manager").KeywordsDBManager
 const UISettingsHelper = require("../settings/ui_settings_helper").UISettingsHelper
 const FileBrowser = require("./file-browser").FileBrowser
+const Search = require("./search").Search
 const Note = require("./note").Note
 
 const EditorWrapper = require("./editor_wrapper").EditorWrapper
@@ -963,3 +964,6 @@ $(".sort-item").click(function () {
 
 
 setDraggable(true)
+
+let search = new Search()
+search.init(resetGrid, onListEnd);
