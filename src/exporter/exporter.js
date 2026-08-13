@@ -7,7 +7,6 @@ class SingleExporter {
     }
 
     retrieveNote(callback) {
-        console.log("SingleExporter retrieveNote")
 
         this.listener.onRetrievingNote();
         if (!compatibility.isElectron) {
@@ -47,7 +46,6 @@ class SingleExporter {
             callback()
             return
         }
-        console.log("extracting path " + path + path.indexOf("data/"))
         var exporter = this
         if (path.indexOf("data/") == 0 && path.indexOf("data/preview_") != 0 && path != "data/") {
             this.currentZip.file(path).async("base64").then(function (data) {
@@ -60,20 +58,17 @@ class SingleExporter {
             })
         } else if (path == "index.html") {
             this.currentZip.file(path).async("string").then(function (data) {
-                console.log("index " + data)
                 exporter.html = data;
                 exporter.loadNextZipFile(exporter.files.pop(), callback)
 
             })
         } else if (path == "metadata.json") {
             this.currentZip.file(path).async("string").then(function (data) {
-                console.log("metadata " + data)
                 exporter.metadata = JSON.parse(data)
                 exporter.loadNextZipFile(exporter.files.pop(), callback)
 
             })
         } else {
-            console.log("else")
             exporter.loadNextZipFile(exporter.files.pop(), callback)
         }
     }
@@ -142,7 +137,6 @@ class SingleExporter {
                             var mediaList = document.createElement("div")
                             if (!config.displayCompleteImages) {
                                 mediaList.id = "media-list"
-                                console.log("small iamges")
                             } else {
                                 mediaList.id = "full-media-list"
                             }
@@ -210,7 +204,6 @@ class SingleExporter {
                     callback(htmlElem, metadata, attachments)
                 })
             })
-            console.log("SingleExporter retrieving: success")
 
         });
     }
@@ -287,7 +280,6 @@ class ExporterUI {
 
         }
         this.downloadButton.onclick = function () {
-            console.log("download")
             exporterUI.setButtonDisable(true);
             var config = exporterUI.getConfig();
             exporterUI.exporter.exportAndDownloadAsHtml(config, false)
@@ -302,7 +294,6 @@ class ExporterUI {
         }
 
         this.sendButton.onclick = function () {
-            console.log("download")
             exporterUI.setButtonDisable(true);
             var config = exporterUI.getConfig();
             exporterUI.exporter.exportAndDownloadAsHtml(config, true)

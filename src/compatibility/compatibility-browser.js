@@ -108,12 +108,10 @@ class BrowserCompatibility extends Compatibility {
                 setTimeout(function () {
                     RequestBuilder.sRequestBuilder.get("/settings/current_version", function (error, version) {
                         if (!error) {
-                            console.log("current version " + version)
                             $.ajax({
                                 url: "https://qn.phie.ovh/binaries/desktop/current_version",
                                 type: "GET",
                                 success: function (newVersion) {
-                                    console.log("new version " + newVersion)
                                     if (parseInt(version.replace(/\./g, "")) < parseInt(newVersion.replace(/\./g, ""))) {
                                         displaySnack(
                                             {

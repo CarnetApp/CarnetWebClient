@@ -4,7 +4,6 @@ const RequestBuilder = require("../requests/request_builder").RequestBuilder
 class Compatibility {
     constructor() {
         this.isElectron = false;//typeof require === "function" || typeof parent.require === "function";
-        console.log("this.isElectron  " + this.isElectron)
         if (this.isElectron) {
             if (typeof require !== "function") {
                 compatRequire = parent.require
@@ -14,11 +13,9 @@ class Compatibility {
         this.isAndroid = typeof app === "object";
 
         this.isGtk = false;
-        console.log("isAndroid" + this.isAndroid)
 
         if (this.isElectron) {
             RequestBuilder = ElectronRequestBuilder;
-            console.log("set resquest builder")
         }
         if (this.isAndroid) {
             $(document).on('ajaxSend', function (elm, xhr, settings) {

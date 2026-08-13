@@ -53,9 +53,7 @@ TextGetterTask.prototype.startList = function () {
 }
 
 TextGetterTask.prototype.getNext = function () {
-    console.log(this.current)
     if (this.current >= this.stopAt || this.current >= this.list.length) {
-        console.log("save cache ")
         store.set("note_cache", JSON.stringify(cachedMetadata))
         return;
     }
@@ -91,15 +89,12 @@ String.prototype.replaceAll = function (search, replacement) {
     return target.replace(new RegExp(search, 'g'), replacement);
 };
 function loadEditor(newOnEditorLoadedCallback){
-    console.log("preloading")
     if(newOnEditorLoadedCallback != undefined)
         editorWrapper.onEditorLoaded = newOnEditorLoadedCallback
     if(!editorWrapper.isLoading && !editorWrapper.isLoaded ){
         editorWrapper.isLoading= true
 
         editorWrapper.registerWriterEvent("editor_ready", function () { 
-            console.log("editor_ready")
-
             editorWrapper.isLoading = false
             editorWrapper.isLoaded = true
             if(editorWrapper.onEditorLoaded != undefined)
@@ -129,10 +124,7 @@ function loadEditor(newOnEditorLoadedCallback){
 function onEditorExtracted(error, data, notePath, action) {
     if (error)
         return;
-
-   
     else {
-        console.log("reuse old iframe");
 
     }
 }
@@ -163,7 +155,6 @@ var displaySnack = function (data) {
 }
 
 function onDragEnd(gg) {
-    console.log("ondragend")
     dontOpen = true;
 }
 
@@ -305,10 +296,8 @@ class NoteContextualDialog extends ContextualDialog {
             var keywordDB = new KeywordsDBManager();
             context.dialog.close();
             db.removeFromDB(note.path, function (error, data) {
-                console.log("deleted from db " + error)
                 if (!error)
                     keywordDB.removeFromDB(undefined, note.path, function (error, data) {
-                        console.log("deleted from db " + error)
                         if (!error)
                             RequestBuilder.sRequestBuilder.delete("/notes?path=" + encodeURIComponent(note.path), function () {
                                 list(currentPath, true)
@@ -410,7 +399,6 @@ function sortBy(sortBy, reversed, discret) {
     }
     noteCardViewGrid.setNotesAndFolders(notes)
     currentTask = new TextGetterTask(notes);
-    console.log("stopping and starting task")
     currentTask.startList();
 
 }
@@ -519,8 +507,6 @@ function onListEnd(pathToList, files, metadatas, discret, force, fromCache) {
         sortBy(UISettingsHelper.getInstance().get('sort_by'), UISettingsHelper.getInstance().get('reversed'), discret);
         if (discret) {
             document.getElementById("grid-container").scrollTop = scroll;
-            console.log("scroll : " + scroll)
-
         }
         if (!fromCache && shouldPreloadEditor) {
             loadEditor(undefined)
@@ -539,7 +525,6 @@ function list(pathToList, discret) {
     }
     if (pathToList == undefined)
         pathToList = currentPath;
-    console.log("listing path " + pathToList);
     var hasPathChanged = currentPath !== pathToList
     currentPath = pathToList;
 
@@ -612,7 +597,6 @@ function maximize() {
 
 function closeW() {
     remote.app.exit(0);
-    console.log("cloose")
 }
 
 /*main.setMergeListener(function () {
@@ -689,8 +673,6 @@ document.getElementById("grid-container").onscroll = function () {
 var hasLoadedOnce = false
 
 var loadingView = document.getElementById("loading-view")
-//var browserElem = document.getElementById("browser")
-console.log("pet")
 
 var dias = document.getElementsByClassName("mdl-dialog")
 for (var i = 0; i < dias.length; i++) {
@@ -873,7 +855,6 @@ if (launchCount == null || launchCount == undefined) {
     launchCount = 1
 }
 else launchCount = parseInt(launchCount)
-console.log("launch count " + launchCount)
 if (launchCount % 10 == 0)
     setTimeout(function () {
         displaySnack({

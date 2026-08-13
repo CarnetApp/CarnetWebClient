@@ -7,7 +7,6 @@ class ElectronRequestBuilder extends RequestBuilder {
     get(path, callback) {
         var requestId = Utils.generateUID()
         path = this.buildUrl(this.cleanPath(path));
-        console.log("getting " + path)
         this.main.sendRequestToServer("GET", path, undefined, function (err, data) {
             if (data != undefined) {
                 try {
@@ -62,7 +61,6 @@ class ElectronRequestBuilder extends RequestBuilder {
             var reader = new FileReader();
             reader.readAsDataURL(files[i]);
             reader.onload = function () {
-                console.log(reader.result.replace(/^data:.*\/\w+;base64,/, ""));
                 var f = {
                     name: files[i].name,
                     data: reader.result.replace(/^data:.*\/\w+;base64,/, "")

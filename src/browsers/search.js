@@ -32,7 +32,6 @@ class SearchEngine {
 
         RequestBuilder.sRequestBuilder.get("/notes/search?path=." + "&query=" + encodeURIComponent(searching), function (error, data) {
             if (!error) {
-                console.log("listing")
                 list("search://", true);
             }
         });

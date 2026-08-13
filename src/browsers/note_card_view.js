@@ -77,7 +77,6 @@ NoteCardView.prototype.setIsAppend = function (isAppend) {
 }
 
 NoteCardView.prototype.toggleDisplayMore = function () {
-    console.log("todolist height " + $(this.cardTodoLists).height())
     if ($(this.cardMedias).height() >= 300) {
         this.displayMore.classList.add("display-more-media");
         this.displayMore.style.display = "block"
@@ -147,7 +146,6 @@ NoteCardView.prototype.setNote = function (note) {
     if (note.metadata.keywords.length > 0) {
         if (typeof note.metadata.keywords[Symbol.iterator] === 'function')
             for (let keyword of note.metadata.keywords) {
-                console.log("keyword " + keyword)
                 keywordSpan = document.createElement('span');
                 keywordSpan.innerHTML = keyword;
                 keywordSpan.classList.add("keyword");

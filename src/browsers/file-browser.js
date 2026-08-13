@@ -15,11 +15,9 @@ FileBrowser.prototype.createFolder = function (name, callback) {
 
 FileBrowser.prototype.list = function (callback) {
   if (this.path == "recentdb://") {
-    console.log("getting recent");
     var db = RecentDBManager.getInstance();
     return db.getFlatenDB(function (err, flaten, pin, metadata) {
       if (err) return callback(true);
-      console.log(JSON.stringify(flaten));
       var files = [];
       for (let filePath of pin) {
         var filename = filePath;
@@ -38,18 +36,14 @@ FileBrowser.prototype.list = function (callback) {
       callback(false, files, true, metadata);
     });
   } else if (this.path.startsWith("keyword://")) {
-    console.log("getting keyword");
     var keywordsDBManager = new KeywordsDBManager();
     var filebrowser = this;
     return keywordsDBManager.getFlatenDB(function (error, data) {
       var files = [];
-      console.log("keyword " + filebrowser.path.substring("keyword://".length));
       for (let filePath of data[
         filebrowser.path.substring("keyword://".length)
       ]) {
         var filename = filePath;
-        console.log("file " + filePath);
-
         filePath = filePath;
         file = new File(filePath, true, filename);
         files.push(file);
@@ -72,7 +66,6 @@ FileBrowser.prototype.list = function (callback) {
         var files_in = [];
         var endOfSearch = !fbrowser.path.startsWith("search://");
         for (let node of data["files"]) {
-          console.log(node);
           if (node == "end_of_search") {
             endOfSearch = true;
             continue;
