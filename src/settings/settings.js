@@ -129,25 +129,6 @@ $(document).ready(function () {
     UISettingsHelper.getInstance().postSettings()
   }
 
-
-  document.getElementById("use_md_editor").onchange = function (value) {
-
-    RequestBuilder.sRequestBuilder.post("/settings/use_md_editor", {
-      useMD: value.target.checked
-    }, function (error, data) {
-    })
-  }
-
-  RequestBuilder.sRequestBuilder.get("/settings/use_md_editor", function (error, data) {
-    if (data == "true" || data == true) {
-
-      document.getElementById("use_md_editor").checked = true
-      document.getElementById("use_md_editor").parentNode.classList.add("is-checked")
-    } else {
-      document.getElementById("use_md_editor").checked = false
-      document.getElementById("use_md_editor").parentNode.classList.remove("is-checked")
-    }
-  })
   document.getElementById("preload_editor").onchange = function (value) {
     if (value.target.checked)
       UISettingsHelper.getInstance().set("should_preload_editor", true);
